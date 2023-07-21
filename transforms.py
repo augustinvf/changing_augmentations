@@ -14,7 +14,15 @@ basic_transformation = T.Compose(
     ]
 )
 
-class MyTransform() :
+test_transformation = T.Compose(
+    [
+        T.Resize((32, 32)),
+        T.ToTensor(),
+        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+    ]
+)
+
+class ContrastiveTransform():
     def __init__(
         self,
         input_size: int = 224,
@@ -58,10 +66,41 @@ class MyTransform() :
     def __call__(self, image) :
         return [self.transform(image), self.transform(image)]
 
-test_transformation = T.Compose(
-    [
-        T.Resize((32, 32)),
-        T.ToTensor(),
-        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
-    ]
-)
+class MyTransformForOneImage(ContrastiveTransform):
+    def __init__(
+                self, 
+                label: int, 
+                power_list: list,
+                input_size: int = 224,
+                cj_prob: float = 0.8,
+                cj_bright: float = 0.8,
+                cj_contrast: float = 0.8,
+                cj_sat: float = 0.8,
+                cj_hue: float = 0.2,
+                random_gray_scale: float = 0.2,
+                gaussian_blur: float = 0.0,
+                kernel_size: Optional[float] = None,
+                sigmas: Tuple[float, float] = (0.1, 2),
+                vf_prob: float = 0.0,
+                hf_prob: float = 0.5,
+                rr_prob: float = 0.0,
+                rr_degrees: Union[None, float, Tuple[float, float]] = None,
+            ):
+        cj_strength = power_list[label][0]
+        min_scale = power_list[label][1]
+        super().__init__(input_size,
+                         cj_prob,
+                         cj_strength,
+                         cj_bright,
+                         cj_contrast,
+                         cj_sat,
+                         cj_hue,
+                         min_scale,
+                         random_gray_scale,
+                         gaussian_blur,
+                         kernel_size,
+                         sigmas,
+                         vf_prob,
+                         hf_prob,
+                         rr_prob,
+                         rr_degrees)

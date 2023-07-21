@@ -21,4 +21,3 @@ class Model(nn.Module):
                 x = self.backbone(x).flatten(start_dim=1)
             z = self.classifier(x)
         return z
-    

@@ -1,14 +1,14 @@
 import torch
 import torchvision
 
-from transforms import MyTransform, basic_transformation, test_transformation
+from transforms import ContrastiveTransform, basic_transformation, test_transformation
 
 batch_size = 128
 
 train_dataset_self_supervised = torchvision.datasets.CIFAR10(
     root='./data_cifar10_train',
     train=True,
-    transform=MyTransform(input_size=32, gaussian_blur=0.0),
+    transform=ContrastiveTransform(input_size=32, gaussian_blur=0.0),
     download=True
 )
 
@@ -52,4 +52,3 @@ test_dataloader = torch.utils.data.DataLoader(
     drop_last=True,
     pin_memory=True
 )
-
