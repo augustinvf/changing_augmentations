@@ -1,4 +1,4 @@
-from typing import Union, Type
+from typing import Union, Type, List
 
 import torch
 import random
@@ -9,11 +9,11 @@ from augmentations import augment_list
 
 def initialize_power_list(nb_classes: int, nb_augmentations: int, mini: int, maxi: int, 
                           val_for_every_power_and_class: int=None, 
-                          powers_for_every_class: list[Union[int, float]]=None):
+                          powers_for_every_class: List[Union[int, float]]=None):
     if val_for_every_power_and_class:
         power_list = [[val_for_every_power_and_class for _ in range(nb_augmentations)] for _ in range (nb_classes)]
     elif powers_for_every_class:
-        power_list = [val_for_every_power_and_class for _ in range (nb_classes)]
+        power_list = [powers_for_every_class for _ in range (nb_classes)]
     else :
         power_list = [[random.randint(mini, maxi) for _ in range(nb_augmentations)] for _ in range (nb_classes)]
     return power_list
