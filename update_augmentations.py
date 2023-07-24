@@ -18,11 +18,9 @@ def initialize_power_list(nb_classes: int, nb_augmentations: int, mini: int, max
         power_list = [[random.randint(mini, maxi) for _ in range(nb_augmentations)] for _ in range (nb_classes)]
     return power_list
 
-def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_time_operations: int, ops_for_every_class: Union[list,tuple]=None):
+def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_time_operations: int, ops_for_every_class: list=None):
     if ops_for_every_class:
-        op0 = ops_for_every_class[0]
-        op1 = ops_for_every_class[1]
-        operation_list = [[op0, op1 for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
+        operation_list = [ops_for_every_class for _ in range (nb_classes)]
     else :
         operation_list = [[random.randint(0, nb_augmentations-1) for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
     return operation_list
