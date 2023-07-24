@@ -226,11 +226,11 @@ class TransformForOneImage():
         self.label = label
         self.operation_list = operation_list
         self.augment_list = augment_list()
-
     def __call__(self, img):
-        ops = []
+        ops = [T.Resize((32, 32)), T.ToTensor()]
         for operation in self.operation_list:   
             ops.append(self.augment_list[operation])
+        ops.append(T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616]))
         for indice_operation, op, minval, maxval in enumerate(ops):
             power = self.power_list[self.label][indice_operation]
             val = (float(power) / 30) * float(maxval - minval) + minval

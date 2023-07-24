@@ -24,14 +24,12 @@ class DatasetTransformsCIFAR10(CIFAR10):
         class_transform = None,
         power_list = [],
         operation_list = [],
-        test_transformation = [],
     ) -> None:
         
         super().__init__(root, train, transform, target_transform, download)
         self.class_transform = class_transform
         self.power_list = power_list
         self.operation_list = operation_list
-        self.test_transformation = test_transformation
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """
@@ -49,8 +47,7 @@ class DatasetTransformsCIFAR10(CIFAR10):
 
         if self.class_transform:
             new_transform = self.class_transform(self.power_list, self.operation_list, target)
-            total_transform = T.Compose(self.test_transformation + new_transform)
-            img = total_transform(img)
+            img = new_transform(img)
 
         elif self.transform :
             img = self.transform(img)
