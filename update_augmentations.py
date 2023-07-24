@@ -67,7 +67,7 @@ def change_power_list(power_list, label, operation_lists, value):
 def update_new_augmentations(dataset: Type[type], class_transform: Type[type], power_list: list, operation_list: list):
     dataset.update_transform(class_transform)
     dataset.update_power_list(power_list)
-    dataset.update_current_operations(operation_list)
+    dataset.update_operation_list(operation_list)
 
 # Looking at the state of the transformations : if a state has not changed, choose new one
 
