@@ -1,9 +1,7 @@
-from typing import Type, Optional, Callable, Tuple, Any
+from typing import Optional, Callable, Tuple, Any
 
 from torchvision.datasets.cifar import CIFAR10
 from PIL import Image
-
-from transforms import MyTransform
 
 class DatasetTransformsCIFAR10(CIFAR10):
     def __init__(
@@ -39,8 +37,8 @@ class DatasetTransformsCIFAR10(CIFAR10):
             assert self.power_list != [], "Power list shouldn't be empty if you want to change augmentations"
             new_transform = self.class_transform(self.power_list, target)
             img = new_transform(img)
-        else:
-            if self.transform is not None:
+
+        elif self.transform is not None:
                 img = self.transform(img)
 
         if self.target_transform is not None:

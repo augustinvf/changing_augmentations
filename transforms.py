@@ -68,10 +68,10 @@ class ContrastiveTransform():
 
 class MyTransformForOneImage(ContrastiveTransform):
     def __init__(
-                self, 
+                self,
                 label: int, 
                 power_list: list,
-                input_size: int = 224,
+                input_size: int = 32,
                 cj_prob: float = 0.8,
                 cj_bright: float = 0.8,
                 cj_contrast: float = 0.8,

@@ -2,10 +2,11 @@ import torch
 import torchvision
 
 from transforms import ContrastiveTransform, basic_transformation, test_transformation
+from dataset import DatasetTransformsCIFAR10
 
 batch_size = 128
 
-train_dataset_self_supervised = torchvision.datasets.CIFAR10(
+train_dataset_self_supervised = DatasetTransformsCIFAR10(
     root='./data_cifar10_train',
     train=True,
     transform=ContrastiveTransform(input_size=32, gaussian_blur=0.0),

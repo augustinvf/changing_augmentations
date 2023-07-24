@@ -8,8 +8,10 @@ from lightly.models.modules import SimCLRProjectionHead
 from lightly.loss import NTXentLoss
 
 from model import Model
-from dataloader import train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size
+from dataloader import train_dataset_self_supervised, train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size
 from training import self_supervised_training, supervised_training
+from update_augmentations import compute_new_augmentations, update_powers, initialize_power_list, apply_new_augmentations
+from transforms import MyTransformForOneImage
 from eval import test_fct
 
 wandb.init(
@@ -29,6 +31,22 @@ nb_steps = len(train_dataloader_supervised)
 nb_cycles = 1
 nb_epochs_self_supervised = 100
 nb_epochs_supervised = 100
+
+# hyperparameters for augmentation updates
+
+softmax = nn.Softmax(dim=0)
+class_transform = MyTransformForOneImage
+power_list, nb_powers = initialize_power_list(nb_classes, [0.5, 0.5])
+norm = 2
+threshold = 0.3
+current_power = 0
+power_coefficient = 1
+power_adjustment = 0
+nb_adjustments = 0
+nb_max_adjustments = nb_steps * nb_epochs_self_supervised / 2
+adjustment = True
+
+# hyperparameters for the model
 
 model = Model(projection_head, input_size_classifier, nb_classes).to(device)
 
@@ -51,11 +69,15 @@ for cycles in range (nb_cycles) :
                    "learning rate self-supervised": scheduler_ss.get_last_lr()[0]
                 })
     for epochs in range(nb_epochs_supervised) :
-        sum_loss_su, accuracy = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su)
+        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, nb_classes, softmax)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
+        if power_adjustment < nb_max_adjustments and adjustment:
+            compute_new_augmentations(nb_classes, power_list, current_power, power_coefficient, r_matrix, threshold, norm)
+            current_power, power_adjustment = update_powers(current_power, power_adjustment, nb_powers, nb_adjustments, nb_max_adjustments)
+            apply_new_augmentations(train_dataset_self_supervised, class_transform, power_list)
 
 # test
 
