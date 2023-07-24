@@ -12,12 +12,14 @@ class DatasetTransformsCIFAR10(CIFAR10):
         target_transform: Optional[Callable] = None,
         download: bool = False,
         class_transform = None,
-        power_list = []
+        power_list = [],
+        current_operations = [],
     ) -> None:
         
         super().__init__(root, train, transform, target_transform, download)
         self.class_transform = class_transform
         self.power_list = power_list
+        self.current_operations = current_operations
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """
@@ -49,3 +51,6 @@ class DatasetTransformsCIFAR10(CIFAR10):
 
     def update_power_list(self, power_list: list):
         self.power_list = power_list
+
+    def update_current_operations(self, current_operations: list):
+        self.current_operations = current_operations

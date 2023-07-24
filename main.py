@@ -10,13 +10,14 @@ from lightly.loss import NTXentLoss
 from model import Model
 from dataloader import train_dataset_self_supervised, train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size
 from training import self_supervised_training, supervised_training
-from update_augmentations import compute_new_augmentations, update_powers, initialize_power_list, apply_new_augmentations
-from transforms import MyTransformForOneImage
+from update_augmentations import initialize_power_list, initialize_operation_list
+from update_augmentations import compute_new_augmentations, apply_new_augmentations, apply_new_augmentations, check_operation_list
+from augmentations import TransformForOneImage, len_augment_list
 from eval import test_fct
 
 wandb.init(
-    project = "deep_learning_project_2",
-    name = "Run_test_5"
+    project = "changing_augmentation_project",
+    name = "Run_test_1"
 )
 
 # tool initialization
@@ -35,16 +36,19 @@ nb_epochs_supervised = 100
 # hyperparameters for augmentation updates
 
 softmax = nn.Softmax(dim=0)
-class_transform = MyTransformForOneImage
-power_list, nb_powers = initialize_power_list(nb_classes, [0.5, 0.5])
+class_transform = TransformForOneImage
+nb_augmentations = len_augment_list()
+nb_same_time_operations = 2
+power_list = initialize_power_list(nb_classes, nb_augmentations)
+operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
 threshold = 0.3
-current_power = 0
-power_coefficient = 1
-power_adjustment = 0
-nb_adjustments = 0
-nb_max_adjustments = nb_steps * nb_epochs_self_supervised / 2
 adjustment = True
+old_results = [None for _ in range(nb_classes)]
+states = [True for _ in range(nb_classes)]
+cycle_min_for_adjustments = 5
+cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised / 2
+
 
 # hyperparameters for the model
 
@@ -62,7 +66,7 @@ scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb
 
 # training
 
-for cycles in range (nb_cycles) :
+for cycle in range (nb_cycles) :
     for epochs in range(nb_epochs_self_supervised) :
         sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
         wandb.log({"loss self-supervised": sum_loss_ss/nb_steps,
@@ -74,10 +78,10 @@ for cycles in range (nb_cycles) :
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-        if power_adjustment < nb_max_adjustments and adjustment:
-            compute_new_augmentations(nb_classes, power_list, current_power, power_coefficient, r_matrix, threshold, norm)
-            current_power, power_adjustment = update_powers(current_power, power_adjustment, nb_powers, nb_adjustments, nb_max_adjustments)
+        if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
+            compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
             apply_new_augmentations(train_dataset_self_supervised, class_transform, power_list)
+            check_operation_list(nb_classes, states, nb_augmentations, operation_list)
 
 # test
 

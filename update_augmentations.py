@@ -1,31 +1,78 @@
 from typing import Union, Type
 
 import torch
+import random
 
-from transforms import MyTransformForOneImage
+from augmentations import augment_list
 
-def initialize_power_list(nb_classes: int, powers: list[Union[float, int]]):
-    nb_powers = len(powers)
-    power_list = [powers for _ in range(nb_classes)]
-    return power_list, nb_powers
-    
-def compute_new_augmentations(nb_classes, power_list, current_power, power_coefficient, ressemblance_matrix, threshold, p=2):
+# Initialize list to follow augmentation changes
+
+def initialize_power_list(nb_classes: int, nb_augmentations: int, mini: int, maxi: int, 
+                          val_for_every_power_and_class: int=None, 
+                          powers_for_every_class: list[Union[int, float]]=None):
+    if val_for_every_power_and_class:
+        power_list = [[val_for_every_power_and_class for _ in range(nb_augmentations)] for _ in range (nb_classes)]
+    elif powers_for_every_class:
+        power_list = [val_for_every_power_and_class for _ in range (nb_classes)]
+    power_list = [[random.randint(mini, maxi) for _ in range(nb_augmentations)] for _ in range (nb_classes)]
+    return power_list
+
+def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_time_operations: int, ops_for_every_class: Union[list,tuple]=None):
+    if ops_for_every_class:
+        op0 = ops_for_every_class[0]
+        op1 = ops_for_every_class[1]
+        operation_list = [[op0, op1 for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
+    operation_list = [[random.randint(0, nb_augmentations-1) for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
+    return operation_list
+
+# Fonctions to change the augmentations
+
+def compute_new_augmentations(nb_classes, power_list, operation_list, old_results, 
+                              states, ressemblance_matrix, threshold, p=2):
     for label in range(nb_classes):
-        maxi = torch.argmax(ressemblance_matrix[label,:])
-        ressemblance_matrix[label,maxi] = 0
-        snd_maxi = torch.argmax(ressemblance_matrix[label,:])
-        diff = torch.norm(maxi-snd_maxi, p=p)
-        if threshold <= diff :
-            power_list[label][current_power] *= power_coefficient * (1 + diff**2)
+        diff = evaluation_criterion(label, ressemblance_matrix, p)
+        has_changed = adjust_powers(diff, threshold, old_results, label, power_list, operation_list)
+        old_results[label] = diff
+        states[label] = has_changed
 
-def apply_new_augmentations(dataset: Type[type], class_transform: Type[type], power_list: list):
-     dataset.update_transform(MyTransformForOneImage)
+def evaluation_criterion(label, ressemblance_matrix, p=2):
+    """
+    provides the comparison criterion for power adjustment
+    """
+    maxi = torch.argmax(ressemblance_matrix[label,:])
+    ressemblance_matrix[label,maxi] = 0
+    snd_maxi = torch.argmax(ressemblance_matrix[label,:])
+    diff = torch.norm(maxi-snd_maxi, p=p)
+    return diff
+
+def adjust_powers(criterion, threshold, old_results, label, power_list, operation_lists):
+    has_changed = True
+    gap = criterion - old_results[label]
+    if criterion > threshold :
+        if gap > 0 :
+            change_power_list(power_list, label, operation_lists, -2)
+        if gap < 0 :
+            change_power_list(power_list, label, operation_lists, 1)
+    else :
+        if old_results[label] < threshold :
+            has_changed = False
+    return has_changed
+
+def change_power_list(power_list, label, operation_lists, value):
+    for power in operation_lists :
+        power_list[label][power] += value
+
+# Apply the augmentations ie change the attribut of the transformation to make the changes effective
+
+def apply_new_augmentations(dataset: Type[type], class_transform: Type[type], power_list: list, operation_list: list):
+     dataset.update_transform(class_transform)
      dataset.update_power_list(power_list)
+     dataset.update_current_operations(operation_list)
 
-def update_powers(current_power, power_adjustment, nb_powers, nb_adjustments):
-        power_adjustment += 1
-        if power_adjustment % nb_adjustments == 0 :
-            current_power += 1
-            if current_power == nb_powers :
-                current_power = 0
-        return current_power, power_adjustment
+# Look at the state of the transformation : if a transformation has not changed, choose new ones
+
+def check_operation_list(nb_classes, states, nb_augmentations, operation_list):
+    for label in range(nb_classes):
+        if not states[label] :
+            new_powers = random.sample(augment_list(), k=nb_augmentations)
+            operation_list[label] = new_powers
