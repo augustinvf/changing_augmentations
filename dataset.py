@@ -1,7 +1,17 @@
 from typing import Optional, Callable, Tuple, Any
 
 from torchvision.datasets.cifar import CIFAR10
+import torchvision.transforms as T
+
 from PIL import Image
+
+test_transformation = T.Compose(
+    [
+        T.Resize((32, 32)),
+        T.ToTensor(),
+        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+    ]
+)
 
 class DatasetTransformsCIFAR10(CIFAR10):
     def __init__(
@@ -13,13 +23,15 @@ class DatasetTransformsCIFAR10(CIFAR10):
         download: bool = False,
         class_transform = None,
         power_list = [],
-        current_operations = [],
+        operation_list = [],
+        test_transformation = [],
     ) -> None:
         
         super().__init__(root, train, transform, target_transform, download)
         self.class_transform = class_transform
         self.power_list = power_list
-        self.current_operations = current_operations
+        self.operation_list = operation_list
+        self.test_transformation = test_transformation
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """
@@ -36,12 +48,12 @@ class DatasetTransformsCIFAR10(CIFAR10):
         img = Image.fromarray(img)
 
         if self.class_transform:
-            assert self.power_list != [], "Power list shouldn't be empty if you want to change augmentations"
-            new_transform = self.class_transform(self.power_list, target)
-            img = new_transform(img)
+            new_transform = self.class_transform(self.power_list, self.operation_list, target)
+            total_transform = T.Compose(self.test_transformation, new_transform)
+            img = total_transform(img)
 
-        elif self.transform is not None:
-                img = self.transform(img)
+        elif self.transform :
+            img = self.transform(img)
 
         if self.target_transform is not None:
             target = self.target_transform(target)
@@ -52,5 +64,5 @@ class DatasetTransformsCIFAR10(CIFAR10):
     def update_power_list(self, power_list: list):
         self.power_list = power_list
 
-    def update_current_operations(self, current_operations: list):
-        self.current_operations = current_operations
+    def update_operation_list(self, operation_list: list):
+        self.operation_list = operation_list

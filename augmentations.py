@@ -3,8 +3,25 @@ import random
 
 import PIL, PIL.ImageOps, PIL.ImageEnhance, PIL.ImageDraw
 import numpy as np
+import torchvision.transforms as T
 from PIL import Image
 
+basic_transformation = T.Compose(
+    [
+        T.RandomCrop(32, padding = 4),
+        T.RandomHorizontalFlip(),
+        T.ToTensor(),
+        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+    ]
+)
+
+test_transformation = T.Compose(
+    [
+        T.Resize((32, 32)),
+        T.ToTensor(),
+        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+    ]
+)
 
 def ShearX(img, v):  # [-0.3, 0.3]
     assert -0.3 <= v <= 0.3
@@ -204,15 +221,15 @@ def len_augment_list():
     return len(augment_list())
 
 class TransformForOneImage():
-    def __init__(self, power_list, current_operations, label):
+    def __init__(self, power_list, operation_list, label):
         self.power_list = power_list
         self.label = label
-        self.current_operations = current_operations
+        self.operation_list = operation_list
         self.augment_list = augment_list()
 
     def __call__(self, img):
         ops = []
-        for operation in self.current_operations:   
+        for operation in self.operation_list:   
             ops.append(self.augment_list[operation])
         for indice_operation, op, minval, maxval in enumerate(ops):
             power = self.power_list[self.label][indice_operation]

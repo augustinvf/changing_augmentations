@@ -13,11 +13,12 @@ from training import self_supervised_training, supervised_training
 from update_augmentations import initialize_power_list, initialize_operation_list
 from update_augmentations import compute_new_augmentations, apply_new_augmentations, apply_new_augmentations, check_operation_list
 from augmentations import TransformForOneImage, len_augment_list
+from augmentations import test_transformation
 from eval import test_fct
 
 wandb.init(
     project = "changing_augmentation_project",
-    name = "Run_test_1"
+    name = "crash_test"
 )
 
 # tool initialization
@@ -49,6 +50,12 @@ states = [True for _ in range(nb_classes)]
 cycle_min_for_adjustments = 5
 cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised / 2
 
+# configuring the training dataset whose augmentations will change
+
+train_dataset_self_supervised.class_transform = class_transform
+train_dataset_self_supervised.power_list = power_list
+train_dataset_self_supervised.operation_list = operation_list
+train_dataset_self_supervised.test_transformation =  test_transformation
 
 # hyperparameters for the model
 
