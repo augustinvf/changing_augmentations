@@ -228,7 +228,7 @@ class TransformForOneImage():
         self.augment_list = augment_list()
     def __call__(self, img):
         ops = [T.Resize((32, 32)), T.ToTensor()]
-        for operation in self.operation_list:   
+        for operation in self.operation_list[self.label]:   
             ops.append(self.augment_list[operation])
         ops.append(T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616]))
         for indice_operation, op, minval, maxval in enumerate(ops):
