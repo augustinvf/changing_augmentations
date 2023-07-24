@@ -15,6 +15,15 @@ basic_transformation = T.Compose(
     ]
 )
 
+first_train_transformations = T.Compose(
+    [
+        T.Resize((32, 32)),
+        T.ToTensor(),
+    ]
+)
+
+last_train_transformations = T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+
 test_transformation = T.Compose(
     [
         T.Resize((32, 32)),
@@ -227,7 +236,7 @@ class TransformForOneImage():
         self.operation_list = operation_list
         self.augment_list = augment_list()
     def __call__(self, img):
-        ops = [T.Resize((32, 32)), T.ToTensor()]
+        ops = []
         for operation in self.operation_list[self.label]:   
             ops.append(self.augment_list[operation])
         ops.append(T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616]))

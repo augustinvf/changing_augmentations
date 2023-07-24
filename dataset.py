@@ -13,7 +13,7 @@ test_transformation = T.Compose(
     ]
 )
 
-class DatasetTransformsCIFAR10(CIFAR10):
+class TrainDatasetTransformsCIFAR10(CIFAR10):
     def __init__(
         self,
         root: str,
@@ -24,12 +24,16 @@ class DatasetTransformsCIFAR10(CIFAR10):
         class_transform = None,
         power_list = [],
         operation_list = [],
+        first_train_transformations = None,
+        last_train_transformations = None
     ) -> None:
         
         super().__init__(root, train, transform, target_transform, download)
         self.class_transform = class_transform
         self.power_list = power_list
         self.operation_list = operation_list
+        self.first_train_transformations = first_train_transformations
+        self.last_train_transformations = last_train_transformations
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """
@@ -45,12 +49,18 @@ class DatasetTransformsCIFAR10(CIFAR10):
         # to return a PIL Image
         img = Image.fromarray(img)
 
+        if self.first_train_transformations:
+            img = self.first_train_transformations(img)
+
         if self.class_transform:
             new_transform = self.class_transform(self.power_list, self.operation_list, target)
             img = new_transform(img)
 
         elif self.transform :
             img = self.transform(img)
+
+        if self.last_train_transformations:
+            img = self.last_train_transformations(img)
 
         if self.target_transform is not None:
             target = self.target_transform(target)
