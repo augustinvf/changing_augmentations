@@ -49,7 +49,7 @@ class DatasetTransformsCIFAR10(CIFAR10):
 
         if self.class_transform:
             new_transform = self.class_transform(self.power_list, self.operation_list, target)
-            total_transform = T.Compose(self.test_transformation, new_transform)
+            total_transform = T.Compose(self.test_transformation + new_transform)
             img = total_transform(img)
 
         elif self.transform :

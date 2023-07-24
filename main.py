@@ -11,7 +11,7 @@ from model import Model
 from dataloader import train_dataset_self_supervised, train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size
 from training import self_supervised_training, supervised_training
 from update_augmentations import initialize_power_list, initialize_operation_list
-from update_augmentations import compute_new_augmentations, apply_new_augmentations, apply_new_augmentations, check_operation_list
+from update_augmentations import compute_new_augmentations, update_new_augmentations, check_operation_list
 from augmentations import TransformForOneImage, len_augment_list
 from augmentations import test_transformation
 from eval import test_fct
@@ -52,9 +52,7 @@ cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised / 2
 
 # configuring the training dataset whose augmentations will change
 
-train_dataset_self_supervised.class_transform = class_transform
-train_dataset_self_supervised.power_list = power_list
-train_dataset_self_supervised.operation_list = operation_list
+update_new_augmentations(train_dataset_self_supervised, class_transform, power_list, operation_list)
 train_dataset_self_supervised.test_transformation =  test_transformation
 
 # hyperparameters for the model
@@ -87,7 +85,7 @@ for cycle in range (nb_cycles) :
                 })
         if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
             compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
-            apply_new_augmentations(train_dataset_self_supervised, class_transform, power_list)
+            update_new_augmentations(train_dataset_self_supervised, class_transform, power_list)
             check_operation_list(nb_classes, states, nb_augmentations, operation_list)
 
 # test

@@ -64,7 +64,7 @@ def change_power_list(power_list, label, operation_lists, value):
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
 
-def apply_new_augmentations(dataset: Type[type], class_transform: Type[type], power_list: list, operation_list: list):
+def update_new_augmentations(dataset: Type[type], class_transform: Type[type], power_list: list, operation_list: list):
     dataset.update_transform(class_transform)
     dataset.update_power_list(power_list)
     dataset.update_current_operations(operation_list)
