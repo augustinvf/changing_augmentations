@@ -40,7 +40,7 @@ softmax = nn.Softmax(dim=0)
 class_transform = TransformForOneImage
 nb_augmentations = len_augment_list()
 nb_same_time_operations = 2
-power_list = initialize_power_list(nb_classes, nb_augmentations)
+power_list = initialize_power_list(nb_classes, nb_augmentations, 0, 30)
 operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
 threshold = 0.3
