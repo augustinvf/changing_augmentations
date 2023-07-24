@@ -14,7 +14,8 @@ def initialize_power_list(nb_classes: int, nb_augmentations: int, mini: int, max
         power_list = [[val_for_every_power_and_class for _ in range(nb_augmentations)] for _ in range (nb_classes)]
     elif powers_for_every_class:
         power_list = [val_for_every_power_and_class for _ in range (nb_classes)]
-    power_list = [[random.randint(mini, maxi) for _ in range(nb_augmentations)] for _ in range (nb_classes)]
+    else :
+        power_list = [[random.randint(mini, maxi) for _ in range(nb_augmentations)] for _ in range (nb_classes)]
     return power_list
 
 def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_time_operations: int, ops_for_every_class: Union[list,tuple]=None):
@@ -22,7 +23,8 @@ def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_ti
         op0 = ops_for_every_class[0]
         op1 = ops_for_every_class[1]
         operation_list = [[op0, op1 for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
-    operation_list = [[random.randint(0, nb_augmentations-1) for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
+    else :
+        operation_list = [[random.randint(0, nb_augmentations-1) for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
     return operation_list
 
 # Fonctions to change the augmentations
@@ -62,14 +64,14 @@ def change_power_list(power_list, label, operation_lists, value):
     for power in operation_lists :
         power_list[label][power] += value
 
-# Apply the augmentations ie change the attribut of the transformation to make the changes effective
+# Applying the augmentations ie changing the attributs of the transformation to make the changes effective
 
 def apply_new_augmentations(dataset: Type[type], class_transform: Type[type], power_list: list, operation_list: list):
      dataset.update_transform(class_transform)
      dataset.update_power_list(power_list)
      dataset.update_current_operations(operation_list)
 
-# Look at the state of the transformation : if a transformation has not changed, choose new ones
+# Looking at the state of the transformations : if a state has not changed, choose new one
 
 def check_operation_list(nb_classes, states, nb_augmentations, operation_list):
     for label in range(nb_classes):
