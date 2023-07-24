@@ -239,7 +239,6 @@ class TransformForOneImage():
         ops = []
         for operation in self.operation_list[self.label]:   
             ops.append(self.augment_list[operation])
-        ops.append(T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616]))
         for indice_operation, op, minval, maxval in enumerate(ops):
             power = self.power_list[self.label][indice_operation]
             val = (float(power) / 30) * float(maxval - minval) + minval
