@@ -244,4 +244,5 @@ class TransformForOneImage():
             power = self.power_list[self.label][indice_operation]
             val = (float(power) / 30) * float(maxval - minval) + minval
             img = op(img, val)
+        print("okkkkkkkkkkkkkkk")
         return img
