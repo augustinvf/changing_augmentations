@@ -43,6 +43,7 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     ressemblance_matrix[label,maxi] = 0
     snd_maxi = torch.argmax(ressemblance_matrix[label,:])
     diff = torch.norm(maxi-snd_maxi, p=p)
+    print("diff", diff)
     return diff
 
 def adjust_powers(criterion, threshold, old_results, label, power_list, operation_lists):
@@ -59,6 +60,7 @@ def adjust_powers(criterion, threshold, old_results, label, power_list, operatio
     return has_changed
 
 def change_power_list(power_list, label, operation_lists, value):
+    print(power_list)
     for power in operation_lists :
         power_list[label][power] += value
 
