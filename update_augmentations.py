@@ -42,7 +42,7 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     maxi = torch.argmax(ressemblance_matrix[label,:])
     ressemblance_matrix[label,maxi] = 0
     snd_maxi = torch.argmax(ressemblance_matrix[label,:])
-    diff = torch.norm(maxi-snd_maxi, p=p)
+    diff = torch.norm((maxi-snd_maxi).float, p=p)
     print("diff", diff)
     return diff
 
