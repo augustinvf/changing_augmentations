@@ -17,7 +17,7 @@ from eval import test_fct
 
 wandb.init(
     project = "changing_augmentations_project",
-    name = "crash_test"
+    name = "run_1"
 )
 
 # tool initialization
