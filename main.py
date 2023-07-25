@@ -29,8 +29,8 @@ input_size_classifier = 512
 projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
 
-nb_cycles = 1
-nb_epochs_self_supervised = 1
+nb_cycles = 10
+nb_epochs_self_supervised = 5
 nb_epochs_supervised = 1
 
 # hyperparameters for augmentation updates
@@ -82,10 +82,12 @@ for cycle in range (nb_cycles) :
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
         print("r_matrix", r_matrix)
-    if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
+    # cycle_min_for_adjustments < cycle < cycle_max_for_adjustments
+    if adjustment:
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
+        print("power_list", power_list)
 
 # test
 

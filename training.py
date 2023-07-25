@@ -44,10 +44,6 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
 
         y_hat = model(image_without_augmentation, "supervised")
 
-        print(y_hat)
-        print(softmax(y_hat))
-        print(torch.split(softmax(y_hat), 1))
-
         distributions = torch.cat(torch.split(softmax(y_hat), 1), dim=0).to(device)
         for index, distribution in enumerate(distributions) :
             ressemblance_matrix[labels[index],:] += distribution

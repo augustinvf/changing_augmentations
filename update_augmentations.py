@@ -60,8 +60,6 @@ def adjust_powers(criterion, threshold, old_results, label, power_list, operatio
 
 def change_power_list(power_list, label, operation_list, value):
     for power in operation_list[label] :
-        print(label)
-        print(power)
         power_list[label][power] += value
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
