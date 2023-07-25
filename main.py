@@ -30,8 +30,8 @@ projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
 
 nb_cycles = 10
-nb_epochs_self_supervised = 2
-nb_epochs_supervised = 1
+nb_epochs_self_supervised_by_cycle = 2
+nb_epochs_supervised_by_cycle = 1
 
 # hyperparameters for augmentation updates
 
@@ -46,7 +46,7 @@ adjustment = True
 old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
 cycle_min_for_adjustments = -1
-cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised / 2
+cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised_by_cycle / 2
 
 # configuring the training dataset whose augmentations will change
 
@@ -59,25 +59,25 @@ model = Model(projection_head, input_size_classifier, nb_classes).to(device)
 
 criterion_ss = NTXentLoss()
 optimizer_ss = torch.optim.SGD(list(model.backbone.parameters()) + list(model.projection_head.parameters()), 0.3, momentum = 0.9, weight_decay=1e-6)
-scheduler_ss = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_ss, T_max=nb_cycles*nb_epochs_self_supervised, eta_min=0,
+scheduler_ss = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_ss, T_max=nb_cycles*nb_epochs_self_supervised_by_cycle, eta_min=0,
                                                            last_epoch=-1)
 
 criterion_su = nn.CrossEntropyLoss()
 optimizer_su = torch.optim.SGD(model.classifier.parameters(), lr = 0.1, momentum = 0.9, weight_decay=5e-4)
-scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb_cycles*nb_epochs_supervised, eta_min=0,
+scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb_cycles*nb_epochs_supervised_by_cycle, eta_min=0,
                                                            last_epoch=-1)
 
 # training
 
 for cycle in range (nb_cycles) :
     print("debut cycle")
-    for epochs in range(nb_epochs_self_supervised) :
+    for epochs in range(nb_epochs_self_supervised_by_cycle) :
         sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
         wandb.log({"loss self-supervised": sum_loss_ss/nb_steps,
                    "learning rate self-supervised": scheduler_ss.get_last_lr()[0]
                 })
     print("début supervised")
-    for epochs in range(nb_epochs_supervised) :
+    for epochs in range(nb_epochs_supervised_by_cycle) :
         sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, nb_classes, softmax)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
