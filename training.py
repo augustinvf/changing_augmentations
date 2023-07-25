@@ -33,8 +33,6 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     sum_loss_su = 0
     accuracy = 0
     ressemblance_matrix = torch.zeros((nb_classes, nb_classes)).to(device)
-    print("r_matrix", ressemblance_matrix)
-    print("r_matrix shape", ressemblance_matrix.shape)
     for mini_batch, labels in train_dataloader_supervised :
 
         # reinitialization of the gradients

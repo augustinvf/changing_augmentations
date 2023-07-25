@@ -45,21 +45,21 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     diff = torch.norm((maxi-snd_maxi).float(), p=p).item()
     return diff
 
-def adjust_powers(criterion, threshold, old_results, label, power_list, operation_lists):
+def adjust_powers(criterion, threshold, old_results, label, power_list, operation_list):
     has_changed = True
     gap = criterion - old_results[label]
     if criterion > threshold :
         if gap > 0 :
-            change_power_list(power_list, label, operation_lists, -2)
+            change_power_list(power_list, label, operation_list, -2)
         if gap < 0 :
-            change_power_list(power_list, label, operation_lists, 1)
+            change_power_list(power_list, label, operation_list, 1)
     else :
         if old_results[label] < threshold :
             has_changed = False
     return has_changed
 
-def change_power_list(power_list, label, operation_lists, value):
-    for power in operation_lists :
+def change_power_list(power_list, label, operation_list, value):
+    for power in operation_list[label] :
         print(label)
         print(power)
         power_list[label][power] += value
