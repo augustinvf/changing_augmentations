@@ -48,7 +48,7 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
 
         distributions = torch.split(softmax(y_hat), 1)
         for index, distribution in enumerate(distributions) :
-            ressemblance_matrix[labels[index],:] += distribution
+            ressemblance_matrix[labels[index],:] += distribution.reshape((distribution.shape[1]))
 
         accuracy += torch.sum(torch.eq(torch.argmax(y_hat, axis = 1), labels)).item()
 
