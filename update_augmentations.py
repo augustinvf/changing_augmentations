@@ -42,8 +42,7 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     maxi = torch.argmax(ressemblance_matrix[label,:])
     ressemblance_matrix[label,maxi] = 0
     snd_maxi = torch.argmax(ressemblance_matrix[label,:])
-    diff = torch.norm((maxi-snd_maxi).float(), p=p)
-    print("diff", diff)
+    diff = torch.norm((maxi-snd_maxi).float(), p=p).item()
     return diff
 
 def adjust_powers(criterion, threshold, old_results, label, power_list, operation_lists):
@@ -60,8 +59,9 @@ def adjust_powers(criterion, threshold, old_results, label, power_list, operatio
     return has_changed
 
 def change_power_list(power_list, label, operation_lists, value):
-    print(power_list)
     for power in operation_lists :
+        print(label)
+        print(power)
         power_list[label][power] += value
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
