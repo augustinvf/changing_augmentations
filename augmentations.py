@@ -18,11 +18,16 @@ basic_transformation = T.Compose(
 first_train_transformations = T.Compose(
     [
         T.Resize((32, 32)),
-        T.ToTensor(),
     ]
 )
 
-last_train_transformations = T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+last_train_transformations = T.Compose(
+    [
+        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616]),
+        T.ToTensor()
+    ]
+)
+        
 
 test_transformation = T.Compose(
     [
