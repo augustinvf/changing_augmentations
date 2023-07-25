@@ -16,7 +16,7 @@ from augmentations import TransformForOneImage, len_augment_list
 from eval import test_fct
 
 wandb.init(
-    project = "changing_augmentation_project",
+    project = "changing_augmentations_project",
     name = "crash_test"
 )
 
@@ -30,7 +30,7 @@ projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
 
 nb_cycles = 1
-nb_epochs_self_supervised = 10
+nb_epochs_self_supervised = 5
 nb_epochs_supervised = 1
 
 # hyperparameters for augmentation updates
