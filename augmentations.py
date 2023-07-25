@@ -258,8 +258,8 @@ class TransformForOneImage():
             ops.append(self.augment_list[operation])
         self.ops = ops
 
-        self.first_train_transformations=first_transformations
-        self.last_train_transformations=last_transformations
+        self.first_transformations=first_transformations
+        self.last_transformations=last_transformations
 
     def __call__(self, img):
         img0 = transform(img, self.label, self.ops, self.first_transformations, self.last_transformations, self.power_list)
