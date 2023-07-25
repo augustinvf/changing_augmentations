@@ -85,7 +85,7 @@ for cycle in range (nb_cycles) :
         print("r_matrix", r_matrix)
         if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
             compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
-            update_new_augmentations(train_dataset_self_supervised, class_transform, power_list)
+            update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
             check_operation_list(nb_classes, states, nb_augmentations, operation_list)
 
 # test
