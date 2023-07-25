@@ -65,6 +65,8 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         if self.target_transform is not None:
             target = self.target_transform(target)
 
+        print(type(img))
+
     def update_transform(self, class_transform: type):
         self.class_transform=class_transform
 
