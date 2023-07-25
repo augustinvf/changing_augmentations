@@ -32,7 +32,7 @@ def self_supervised_training(device, model, train_dataloader_self_supervised, cr
 def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, nb_classes, softmax):
     sum_loss_su = 0
     accuracy = 0
-    ressemblance_matrix = torch.tensor((nb_classes, nb_classes))
+    ressemblance_matrix = torch.zeros((nb_classes, nb_classes))
     print("r_matrix", ressemblance_matrix)
     print("r_matrix shape", ressemblance_matrix.shape)
     for mini_batch, labels in train_dataloader_supervised :
