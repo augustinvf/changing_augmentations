@@ -179,7 +179,6 @@ def SamplePairing(imgs):  # [0, 0.4]
         i = np.random.choice(len(imgs))
         img2 = PIL.Image.fromarray(imgs[i])
         return PIL.Image.blend(img1, img2, v)
-
     return f
 
 
@@ -239,6 +238,7 @@ def transformation_application(img, label, ops, power_list):
         power = power_list[label][operation_index]
         val = (float(power) / 30) * float(maxval - minval) + minval
         img = op(img, val)
+    return img
 
 def transform(img, label, ops, first_transformations, last_transformations, power_list):
     img = first_transformations(img)
