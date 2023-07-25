@@ -244,7 +244,7 @@ class TransformForOneImage():
 
     def __call__(self, img, label):
         ops = []
-        for operation in self.operation_list[self.label]:   
+        for operation in self.operation_list[label]:   
             ops.append(self.augment_list[operation])
 
         img0 = transform(img, label, ops, self.power_list)
