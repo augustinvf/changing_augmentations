@@ -244,7 +244,7 @@ class TransformForOneImage():
         ops = []
         for operation in self.operation_list[self.label]:   
             ops.append(self.augment_list[operation])
-        print(ops)
+        print(ops, list(ops))
         for elem in ops:
             print(elem)
             #power = self.power_list[self.label][indice_operation]
