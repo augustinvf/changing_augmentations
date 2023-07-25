@@ -48,17 +48,16 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
         img = Image.fromarray(img)
-
+        print(type(img))
         if self.first_train_transformations:
             img = self.first_train_transformations(img)
-
+        print(type(img))
         if self.class_transform:
             new_transform = self.class_transform(self.power_list, self.operation_list, target)
             img = new_transform(img)
-
         elif self.transform :
             img = self.transform(img)
-
+        print(type(img))
         if self.last_train_transformations:
             img = self.last_train_transformations(img)
 
