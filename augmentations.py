@@ -234,18 +234,34 @@ def augment_list():  # 16 oeprations and their ranges
 def len_augment_list():
     return len(augment_list())
 
+def transformation_application(img, label, ops, power_list):
+    for operation_index, (op, minval, maxval) in enumerate(ops):
+        power = power_list[label][operation_index]
+        val = (float(power) / 30) * float(maxval - minval) + minval
+        img = op(img, val)
+
+def transform(img, label, ops, first_transformations, last_transformations, power_list):
+    img = first_transformations(img)
+    img = transformation_application(img, label, ops, power_list)
+    img = last_transformations(img)
+    return img
+
 class TransformForOneImage():
-    def __init__(self, power_list, operation_list, label):
+    def __init__(self, power_list, operation_list, label, first_transformations=[], last_transformations=[]):
         self.power_list = power_list
         self.label = label
         self.operation_list = operation_list
         self.augment_list = augment_list()
-    def __call__(self, img):
+
         ops = []
         for operation in self.operation_list[self.label]:   
             ops.append(self.augment_list[operation])
-        for operation_index, (op, minval, maxval) in enumerate(ops):
-            power = self.power_list[self.label][operation_index]
-            val = (float(power) / 30) * float(maxval - minval) + minval
-            img = op(img, val)
-        return img
+        self.ops = ops
+
+        self.first_train_transformations=first_transformations
+        self.last_train_transformations=last_transformations
+
+    def __call__(self, img):
+        img0 = transform(img, self.label, self.ops, self.first_transformations, self.last_transformations, self.power_list)
+        img1 = transform(img, self.label, self.ops, self.first_transformations, self.last_transformations, self.power_list)
+        return [img0, img1]

@@ -11,8 +11,6 @@ train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
     root='./data_cifar10_train',
     train=True,
     download=True,
-    first_train_transformations = first_train_transformations,
-    last_train_transformations = last_train_transformations
 )
 
 train_dataloader_self_supervised = torch.utils.data.DataLoader(
