@@ -30,8 +30,8 @@ projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
 
 nb_cycles = 1
-nb_epochs_self_supervised = 100
-nb_epochs_supervised = 100
+nb_epochs_self_supervised = 10
+nb_epochs_supervised = 1
 
 # hyperparameters for augmentation updates
 
