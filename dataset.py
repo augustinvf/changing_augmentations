@@ -57,10 +57,9 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
             img = new_transform(img)
         elif self.transform :
             img = self.transform(img)
-        print("fin", type(img))
         if self.last_train_transformations:
             img = self.last_train_transformations(img)
-
+        print("fin", type(img))
         if self.target_transform is not None:
             target = self.target_transform(target)
 
