@@ -45,7 +45,7 @@ threshold = 0.3
 adjustment = True
 old_results = [None for _ in range(nb_classes)]
 states = [True for _ in range(nb_classes)]
-cycle_min_for_adjustments = 5
+cycle_min_for_adjustments = -1
 cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised / 2
 
 # configuring the training dataset whose augmentations will change
@@ -83,10 +83,10 @@ for cycle in range (nb_cycles) :
                 })
         print("r_matrix shape", r_matrix.shape)
         print("r_matrix", r_matrix)
-        if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
-            compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
-            update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
-            check_operation_list(nb_classes, states, nb_augmentations, operation_list)
+    if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
+        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
+        update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
+        check_operation_list(nb_classes, states, nb_augmentations, operation_list)
 
 # test
 
