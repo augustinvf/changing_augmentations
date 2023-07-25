@@ -16,12 +16,16 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         class_transform = None,
         power_list = [],
         operation_list = [],
+        first_transformations=[],
+        last_transformations=[]
     ) -> None:
         
         super().__init__(root, train, transform, target_transform, download)
         self.class_transform = class_transform
         self.power_list = power_list
         self.operation_list = operation_list
+        self.first_transformations = first_transformations
+        self.last_transformations = last_transformations
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """
@@ -38,7 +42,8 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         img = Image.fromarray(img)
 
         if self.class_transform:
-            new_transform = self.class_transform(self.power_list, self.operation_list, target)
+            new_transform = self.class_transform(self.power_list, self.operation_list, target, 
+                                                 self.first_transformations, self.last_transformations)
             img = new_transform(img)
         elif self.transform :
             img = self.transform(img)

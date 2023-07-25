@@ -3,7 +3,6 @@ import torchvision
 
 from augmentations import basic_transformation, test_transformation
 from dataset import TrainDatasetTransformsCIFAR10
-from augmentations import first_train_transformations, last_train_transformations
 
 batch_size = 128
 
