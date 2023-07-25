@@ -81,8 +81,8 @@ for cycle in range (nb_cycles) :
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-        print(r_matrix.shape)
-        print(r_matrix)
+        print("r_matrix shape", r_matrix.shape)
+        print("r_matrix", r_matrix)
         if cycle_min_for_adjustments < cycle < cycle_max_for_adjustments and adjustment:
             compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
             update_new_augmentations(train_dataset_self_supervised, class_transform, power_list)

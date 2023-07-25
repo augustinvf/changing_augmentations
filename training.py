@@ -3,7 +3,7 @@ import torch
 def self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss):
     sum_loss_ss = 0
     for mini_batch, _ in train_dataloader_self_supervised :
-        
+
         # reinitialization of the gradients
         optimizer_ss.zero_grad()
 
@@ -33,7 +33,8 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     sum_loss_su = 0
     accuracy = 0
     ressemblance_matrix = torch.tensor((nb_classes, nb_classes))
-
+    print("r_matrix", ressemblance_matrix)
+    print("r_matrix shape", ressemblance_matrix.shape)
     for mini_batch, labels in train_dataloader_supervised :
 
         # reinitialization of the gradients
