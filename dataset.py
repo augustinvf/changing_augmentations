@@ -13,19 +13,11 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         download: bool = False,
-        class_transform = None,
-        power_list = [],
-        operation_list = [],
-        first_transformations=[],
-        last_transformations=[]
+        self_supervised_augmentations = None,
     ) -> None:
         
         super().__init__(root, train, transform, target_transform, download)
-        self.class_transform = class_transform
-        self.power_list = power_list
-        self.operation_list = operation_list
-        self.first_transformations = first_transformations
-        self.last_transformations = last_transformations
+        self.self_supervised_augmentations = self_supervised_augmentations
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """
@@ -41,10 +33,8 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         # to return a PIL Image
         img = Image.fromarray(img)
 
-        if self.class_transform:
-            new_transform = self.class_transform(self.power_list, self.operation_list, target, 
-                                                 self.first_transformations, self.last_transformations)
-            img = new_transform(img)
+        if self.self_supervised_augmentations:
+            img = self.self_supervised_augmentations(img, target)
         elif self.transform :
             img = self.transform(img)
 
@@ -53,11 +43,5 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
 
         return (img, target)
 
-    def update_transform(self, class_transform: type):
-        self.class_transform=class_transform
-
-    def update_power_list(self, power_list: list):
-        self.power_list = power_list
-
-    def update_operation_list(self, operation_list: list):
-        self.operation_list = operation_list
+    def update_self_supervised_augmentations(self, self_supervised_augmentations):
+        self.self_supervised_augmentations = self_supervised_augmentations

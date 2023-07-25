@@ -3,16 +3,13 @@ import torchvision
 
 from augmentations import basic_transformation, test_transformation
 from dataset import TrainDatasetTransformsCIFAR10
-from augmentations import first_train_transformations, last_train_transformations
 
 batch_size = 128
 
 train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
     root='./data_cifar10_train',
     train=True,
-    download=True,
-    first_transformations=first_train_transformations,
-    last_transformations=last_train_transformations
+    download=True
 )
 
 train_dataloader_self_supervised = torch.utils.data.DataLoader(

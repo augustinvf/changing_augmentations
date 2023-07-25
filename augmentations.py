@@ -15,20 +15,6 @@ basic_transformation = T.Compose(
     ]
 )
 
-first_train_transformations = T.Compose(
-    [
-        T.Resize((32, 32))
-    ]
-)
-
-last_train_transformations = T.Compose(
-    [
-        T.ToTensor(),
-        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
-    ]
-)
-        
-
 test_transformation = T.Compose(
     [
         T.Resize((32, 32)),
@@ -233,35 +219,41 @@ def augment_list():  # 16 oeprations and their ranges
 def len_augment_list():
     return len(augment_list())
 
-def transformation_application(img, label, ops, power_list):
+def transform(img, label, ops, power_list):
+    final_transformations = T.Compose(
+        [
+        T.ToTensor(),
+        T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
+        ]
+    )
+    
+    img = T.Resize((32, 32))(img)
     for operation_index, (op, minval, maxval) in enumerate(ops):
         power = power_list[label][operation_index]
         val = (float(power) / 30) * float(maxval - minval) + minval
         img = op(img, val)
-    return img
-
-def transform(img, label, ops, first_transformations, last_transformations, power_list):
-    img = first_transformations(img)
-    img = transformation_application(img, label, ops, power_list)
-    img = last_transformations(img)
+    img = final_transformations(img)
+    
     return img
 
 class TransformForOneImage():
-    def __init__(self, power_list, operation_list, label, first_transformations=[], last_transformations=[]):
+    def __init__(self, power_list, operation_list):
         self.power_list = power_list
-        self.label = label
         self.operation_list = operation_list
         self.augment_list = augment_list()
 
+    def __call__(self, img, label):
         ops = []
         for operation in self.operation_list[self.label]:   
             ops.append(self.augment_list[operation])
-        self.ops = ops
 
-        self.first_transformations=first_transformations
-        self.last_transformations=last_transformations
-
-    def __call__(self, img):
-        img0 = transform(img, self.label, self.ops, self.first_transformations, self.last_transformations, self.power_list)
-        img1 = transform(img, self.label, self.ops, self.first_transformations, self.last_transformations, self.power_list)
+        img0 = transform(img, label, ops, self.power_list)
+        img1 = transform(img, label, ops, self.power_list)
+        
         return [img0, img1]
+
+    def update_power_list(self, power_list: list):
+        self.power_list = power_list
+
+    def update_operation_list(self, operation_list: list):
+        self.operation_list = operation_list

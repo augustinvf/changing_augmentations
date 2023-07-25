@@ -36,7 +36,6 @@ nb_epochs_supervised = 1
 # hyperparameters for augmentation updates
 
 softmax = nn.Softmax(dim=0)
-class_transform = TransformForOneImage
 nb_augmentations = len_augment_list()
 nb_same_time_operations = 2
 power_list = initialize_power_list(nb_classes, nb_augmentations, 0, 30)
@@ -51,7 +50,8 @@ cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised / 2
 
 # configuring the training dataset whose augmentations will change
 
-update_new_augmentations(train_dataset_self_supervised, class_transform, power_list, operation_list)
+self_supervised_augmentations = TransformForOneImage(power_list, operation_list)
+train_dataset_self_supervised.update_self_supervised_augmentations(self_supervised_augmentations)
 
 # hyperparameters for the model
 
