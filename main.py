@@ -86,11 +86,7 @@ for cycle in range (nb_cycles) :
     if adjustment:
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
-        print("states", states)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
-        print("states", states)
-        print("power_list", power_list)
-        print("operation_list", operation_list)
 
 # test
 
