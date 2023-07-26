@@ -69,13 +69,11 @@ scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb
 # training
 
 for cycle in range (nb_cycles) :
-    print("debut cycle")
     for epochs in range(nb_epochs_self_supervised_by_cycle) :
         sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
         wandb.log({"loss self-supervised": sum_loss_ss/nb_steps,
                    "learning rate self-supervised": scheduler_ss.get_last_lr()[0]
                 })
-    print("début supervised")
     for epochs in range(nb_epochs_supervised_by_cycle) :
         sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, 
                                                               scheduler_su, softmax, ressemblance_matrix, nb_experiences_by_class)
@@ -83,16 +81,12 @@ for cycle in range (nb_cycles) :
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-        print("r_matrix", r_matrix)
     if augmentation_adjustment:
-        print("je commence à ajuster les paramètres")
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
-    print(power_list)
-    print(operation_list)
 
 # test
 
