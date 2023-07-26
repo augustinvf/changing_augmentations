@@ -34,9 +34,9 @@ input_size_classifier = 512
 projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
 
-nb_cycles = 5
-nb_epochs_self_supervised_by_cycle = 1
-nb_epochs_supervised_by_cycle = 1
+nb_cycles = 1
+nb_epochs_self_supervised_by_cycle = 100
+nb_epochs_supervised_by_cycle = 100
 
 # hyperparameters for augmentation updates
 
@@ -78,7 +78,6 @@ scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb
 
 for cycle in range (nb_cycles) :
     for epochs in range(nb_epochs_self_supervised_by_cycle) :
-        print("debut self-supervised")
         sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
         wandb.log({"loss self-supervised": sum_loss_ss/nb_steps,
                    "learning rate self-supervised": scheduler_ss.get_last_lr()[0]
@@ -90,7 +89,6 @@ for cycle in range (nb_cycles) :
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-        print("fin supervised")
     if augmentation_adjustments:
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
