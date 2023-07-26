@@ -25,7 +25,7 @@ def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_ti
         operation_list = [[random.randint(0, nb_augmentations-1) for _ in range(nb_same_time_operations)] for _ in range (nb_classes)]
     return operation_list
 
-# Fonctions to change the augmentations
+# Functions to change the augmentations
 
 def compute_new_augmentations(nb_classes, power_list, operation_list, old_results, 
                               states, ressemblance_matrix, threshold, p=2):
