@@ -88,13 +88,12 @@ for cycle in range (nb_cycles) :
     cycle_min_for_adjustments < cycle < cycle_max_for_adjustments
     if adjustment:
         print("je commence à ajuster les paramètres")
-        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
+        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix/nb_classes, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
         ressemblance_matrix.fill_(0)
     print(power_list)
     print(operation_list)
-    print("fin_cycle")
 
 # test
 

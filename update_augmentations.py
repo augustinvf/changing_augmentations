@@ -31,6 +31,8 @@ def compute_new_augmentations(nb_classes, power_list, operation_list, old_result
                               states, ressemblance_matrix, threshold, p=2):
     for label in range(nb_classes):
         diff = evaluation_criterion(label, ressemblance_matrix, p)
+        print("classes : ", label)
+        print("diff : ", diff)
         has_changed = adjust_powers(diff, threshold, old_results, label, power_list, operation_list)
         old_results[label] = diff
         states[label] = has_changed
@@ -49,6 +51,7 @@ def adjust_powers(criterion, threshold, old_results, label, power_list, operatio
     has_changed = True
     gap = criterion - old_results[label]
     if criterion > threshold :
+        print("on change une puissance")
         if gap > 0 :
             change_power_list(power_list, label, operation_list, -2)
         if gap < 0 :
@@ -61,9 +64,11 @@ def adjust_powers(criterion, threshold, old_results, label, power_list, operatio
 def change_power_list(power_list, label, operation_list, value):
     if value < 0 :
         for power in operation_list[label] :
+            print("moins de puissance pour la classe", label)
             power_list[label][power] = max(value + power_list[label][power], 0)
     else :
         for power in operation_list[label] :
+            print("plus de puissance pour la classe", label)
             power_list[label][power] = min(value + power_list[label][power], 30)
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
