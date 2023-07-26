@@ -2,15 +2,30 @@ import torch
 import torchvision
 
 from augmentations import basic_transformation, test_transformation
-from dataset import TrainDatasetTransformsCIFAR10
+from dataset import TrainDatasetTransformsCIFAR10, RandAugment
 
 batch_size = 128
 
-train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
+augmentation_adjustment=True
+
+randaugment=False
+n = 2
+m = 1
+
+if randaugment:
+    augmentation_adjustment=False
+    train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
     root='./data_cifar10_train',
     train=True,
-    download=True
+    download=True,
+    transform=RandAugment(n, m)
 )
+else :
+    train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
+        root='./data_cifar10_train',
+        train=True,
+        download=True
+    )
 
 train_dataloader_self_supervised = torch.utils.data.DataLoader(
     dataset=train_dataset_self_supervised,

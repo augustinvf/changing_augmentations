@@ -8,7 +8,7 @@ from lightly.models.modules import SimCLRProjectionHead
 from lightly.loss import NTXentLoss
 
 from model import Model
-from dataloader import train_dataset_self_supervised, train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size
+from dataloader import train_dataset_self_supervised, train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size, augmentation_adjustment
 from training import self_supervised_training, supervised_training
 from update_augmentations import initialize_power_list, initialize_operation_list
 from update_augmentations import compute_new_augmentations, update_new_augmentations, check_operation_list
@@ -28,6 +28,7 @@ nb_classes = 10
 input_size_classifier = 512
 projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
+nb_predictions = nb_steps*batch_size
 
 nb_cycles = 10
 nb_epochs_self_supervised_by_cycle = 2
@@ -42,11 +43,8 @@ power_list = initialize_power_list(nb_classes, nb_augmentations, 0, 30)
 operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
 threshold = 0.3
-adjustment = True
 old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
-cycle_min_for_adjustments = -1
-cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised_by_cycle / 2
 ressemblance_matrix = torch.rand((nb_classes, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
@@ -79,16 +77,15 @@ for cycle in range (nb_cycles) :
                 })
     print("début supervised")
     for epochs in range(nb_epochs_supervised_by_cycle) :
-        sum_loss_su, accuracy, r_matrix_not_normalized = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix)
+        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-        print("r_matrix", r_matrix_not_normalized/nb_classes)
-    cycle_min_for_adjustments < cycle < cycle_max_for_adjustments
-    if adjustment:
+        print("r_matrix", r_matrix/nb_predictions)
+    if augmentation_adjustment:
         print("je commence à ajuster les paramètres")
-        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix_not_normalized/nb_classes, threshold, norm)
+        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix/nb_classes, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
         ressemblance_matrix.fill_(0)

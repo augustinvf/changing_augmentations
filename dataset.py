@@ -38,7 +38,7 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
         elif self.transform :
             img = self.transform(img)
 
-        if self.target_transform is not None:
+        if self.target_transform :
             target = self.target_transform(target)
 
         return (img, target)
