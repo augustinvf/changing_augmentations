@@ -28,7 +28,6 @@ nb_classes = 10
 input_size_classifier = 512
 projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
-nb_predictions = nb_steps*batch_size
 
 nb_cycles = 10
 nb_epochs_self_supervised_by_cycle = 2
@@ -45,8 +44,8 @@ norm = 2
 threshold = 0.3
 old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
-ressemblance_matrix = torch.rand((nb_classes, nb_classes), device=device)
-nb_experiences_by_class = torch.rand((1, nb_classes), device=device)
+ressemblance_matrix = torch.zeros((nb_classes, nb_classes), device=device)
+nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
@@ -84,14 +83,14 @@ for cycle in range (nb_cycles) :
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-        print("r_matrix", r_matrix/nb_predictions)
+        print("r_matrix", r_matrix)
     if augmentation_adjustment:
         print("je commence à ajuster les paramètres")
-        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix/nb_classes, threshold, norm)
+        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
         ressemblance_matrix.fill_(0)
-    print("dddd", nb_experiences_by_class)
+        nb_experiences_by_class.fill_(0)
     print(power_list)
     print(operation_list)
 
