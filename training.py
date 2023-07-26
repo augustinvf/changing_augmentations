@@ -29,12 +29,9 @@ def self_supervised_training(device, model, train_dataloader_self_supervised, cr
 
     return sum_loss_ss
 
-def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, nb_classes):
-    print("je rentre dans la fonction")
+def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix):
     sum_loss_su = 0
     accuracy = 0
-    ressemblance_matrix = torch.rand((nb_classes, nb_classes), device=device)
-    print("r taille", ressemblance_matrix.shape)
     for mini_batch, labels in train_dataloader_supervised :
     
         # reinitialization of the gradients
@@ -47,7 +44,6 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
         y_hat = model(image_without_augmentation, "supervised")
 
         distributions = torch.cat(torch.split(softmax(y_hat), 1), dim=0).to(device).detach()
-        print("distrib", distributions.shape)
         for index, distribution in enumerate(distributions) :
             ressemblance_matrix[labels[index],:] += distribution
 

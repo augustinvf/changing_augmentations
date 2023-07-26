@@ -47,6 +47,7 @@ old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
 cycle_min_for_adjustments = -1
 cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised_by_cycle / 2
+ressemblance_matrix = torch.rand((nb_classes, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
@@ -78,19 +79,19 @@ for cycle in range (nb_cycles) :
                 })
     print("début supervised")
     for epochs in range(nb_epochs_supervised_by_cycle) :
-        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, nb_classes=nb_classes)
+        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
         print("r_matrix", r_matrix)
-    # cycle_min_for_adjustments < cycle < cycle_max_for_adjustments
-    # if adjustment:
-    #     print("je commence à ajuster les paramètres")
-    #     compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
-    #     update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
-    #     check_operation_list(nb_classes, states, nb_augmentations, operation_list)
-    print(nb_classes)
+    cycle_min_for_adjustments < cycle < cycle_max_for_adjustments
+    if adjustment:
+        print("je commence à ajuster les paramètres")
+        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
+        update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
+        check_operation_list(nb_classes, states, nb_augmentations, operation_list)
+        ressemblance_matrix.fill_(0)
     print("fin_cycle")
 
 # test
