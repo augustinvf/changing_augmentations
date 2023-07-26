@@ -29,11 +29,14 @@ def self_supervised_training(device, model, train_dataloader_self_supervised, cr
 
     return sum_loss_ss
 
-def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix):
+def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, 
+                        scheduler_su, softmax, ressemblance_matrix, nb_experiences_by_class):
     sum_loss_su = 0
     accuracy = 0
     for mini_batch, labels in train_dataloader_supervised :
-    
+        
+        nb_experiences_by_class += torch.bincount(labels)
+
         # reinitialization of the gradients
         optimizer_su.zero_grad()
 
@@ -57,6 +60,10 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
         optimizer_su.step()
     
     scheduler_su.step()
+
+    print(nb_experiences_by_class.reshape(-1, 1))
+
+    ressemblance_matrix = ressemblance_matrix / nb_experiences_by_class.reshape(-1, 1)
 
     print("apres calcul scheduler")
 
