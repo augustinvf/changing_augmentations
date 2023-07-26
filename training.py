@@ -46,8 +46,6 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
 
         y_hat = model(image_without_augmentation, "supervised")
 
-        print("j'ai calculé y_hat")
-
         distributions = torch.cat(torch.split(softmax(y_hat), 1), dim=0).to(device)
         for index, distribution in enumerate(distributions) :
             ressemblance_matrix[labels[index],:] += distribution
@@ -63,5 +61,7 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     print("fin de fct")
     
     scheduler_su.step()
+
+    print("apres calcul scheduler")
 
     return sum_loss_su, accuracy, ressemblance_matrix
