@@ -34,8 +34,6 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     sum_loss_su = 0
     accuracy = 0
     for mini_batch, labels in train_dataloader_supervised :
-        
-        nb_experiences_by_class += torch.bincount(labels)
 
         # reinitialization of the gradients
         optimizer_su.zero_grad()
@@ -58,6 +56,8 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
         # backward propagation
         loss_su.backward()
         optimizer_su.step()
+
+        nb_experiences_by_class += torch.bincount(labels)
     
     scheduler_su.step()
 
