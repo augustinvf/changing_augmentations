@@ -2,7 +2,8 @@ import torch
 import torchvision
 
 from augmentations import basic_transformation, test_transformation
-from dataset import TrainDatasetTransformsCIFAR10, RandAugment
+from dataset import TrainDatasetTransformsCIFAR10
+from augmentations import RandAugment
 
 batch_size = 128
 

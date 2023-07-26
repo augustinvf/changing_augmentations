@@ -258,7 +258,7 @@ class TransformForOneImage():
     def update_operation_list(self, operation_list: list):
         self.operation_list = operation_list
 
-class RandAugment:
+class RandAugment():
     def __init__(self, n, m):
         self.n = n
         self.m = m      # [0, 30]
