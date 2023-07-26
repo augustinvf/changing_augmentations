@@ -47,7 +47,6 @@ old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
 cycle_min_for_adjustments = -1
 cycle_max_for_adjustments = nb_steps * nb_epochs_self_supervised_by_cycle / 2
-ressemblance_matrix = torch.zeros((nb_classes, nb_classes)).to(device)
 
 # configuring the training dataset whose augmentations will change
 
@@ -79,7 +78,7 @@ for cycle in range (nb_cycles) :
                 })
     print("début supervised")
     for epochs in range(nb_epochs_supervised_by_cycle) :
-        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix)
+        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, nb_classes, softmax)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
