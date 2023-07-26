@@ -29,12 +29,10 @@ def self_supervised_training(device, model, train_dataloader_self_supervised, cr
 
     return sum_loss_ss
 
-def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, nb_classes, softmax):
+def supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, scheduler_su, softmax, ressemblance_matrix):
     print("je rentre dans la fonction")
     sum_loss_su = 0
     accuracy = 0
-    ressemblance_matrix = torch.zeros((nb_classes, nb_classes)).to(device)
-    print("juste avt boucle mini_batch")
     for mini_batch, labels in train_dataloader_supervised :
     
         # reinitialization of the gradients
@@ -58,7 +56,6 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
         # backward propagation
         loss_su.backward()
         optimizer_su.step()
-    print("fin de fct")
     
     scheduler_su.step()
 
