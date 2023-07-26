@@ -11,7 +11,7 @@ augmentation_adjustment=True
 
 randaugment=True
 n = 2
-m = 1
+m = 5
 
 if randaugment:
     augmentation_adjustment=False
