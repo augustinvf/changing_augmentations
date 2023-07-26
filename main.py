@@ -13,7 +13,6 @@ from training import self_supervised_training, supervised_training
 from update_augmentations import initialize_power_list, initialize_operation_list
 from update_augmentations import compute_new_augmentations, update_new_augmentations, check_operation_list
 from augmentations import TransformForOneImage, len_augment_list
-from dataset import initialize_augmentations_for_dataset
 from eval import test_fct
 
 wandb.init(
@@ -24,10 +23,7 @@ wandb.init(
 # data initialization
 
 batch_size = 128
-randaugment = True
-n = 2
-m = 1
-train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, train_dataset_self_supervised = initialize_dataloader(batch_size, randaugment, n, m)
+train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, train_dataset_self_supervised = initialize_dataloader(batch_size)
 
 # tool initialization
 
@@ -49,7 +45,7 @@ augmentation_adjustments=False
 softmax = nn.Softmax(dim=0)
 nb_augmentations = len_augment_list()
 nb_same_time_operations = 2
-power_list = initialize_power_list(nb_classes, nb_augmentations, 0, 30)
+power_list = initialize_power_list(nb_classes, nb_augmentations, 1, 1)
 operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
 threshold = 0.3
@@ -60,8 +56,9 @@ nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
-self_supervised_augmentations = TransformForOneImage(power_list, operation_list)
-initialize_augmentations_for_dataset(train_dataset_self_supervised, self_supervised_augmentations, augmentation_adjustments)
+randaugment = True
+self_supervised_augmentations = TransformForOneImage(power_list, operation_list, randaugment=randaugment, n=2)
+train_dataset_self_supervised.update_self_supervised_augmentations(self_supervised_augmentations)
 
 # hyperparameters for the model
 
@@ -92,7 +89,7 @@ for cycle in range (nb_cycles) :
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
-    if augmentation_adjustment:
+    if augmentation_adjustments:
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)

@@ -6,21 +6,13 @@ from dataset import TrainDatasetTransformsCIFAR10
 from augmentations import RandAugment
 
 
-def initialize_dataloader(batch_size, randaugment=False, n=2, m=5):
+def initialize_dataloader(batch_size):
 
-    if randaugment:
-        train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
+    train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
         root='./data_cifar10_train',
         train=True,
-        download=True,
-        transform=RandAugment(n, m)
+        download=True
     )
-    else :
-        train_dataset_self_supervised = TrainDatasetTransformsCIFAR10(
-            root='./data_cifar10_train',
-            train=True,
-            download=True
-        )
 
     train_dataloader_self_supervised = torch.utils.data.DataLoader(
         dataset=train_dataset_self_supervised,

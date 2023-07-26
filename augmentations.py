@@ -236,16 +236,20 @@ def transform(img, label, ops, power_list):
     return img
 
 class TransformForOneImage():
-    def __init__(self, power_list, operation_list):
+    def __init__(self, power_list, operation_list, randaugment=False, n=2):
         self.power_list = power_list
         self.operation_list = operation_list
         self.augment_list = augment_list()
+        self.randaugment = randaugment
+        self.n = n
 
     def __call__(self, img, label):
-        print("no randaugment")
-        ops = []
-        for operation in self.operation_list[label]:   
-            ops.append(self.augment_list[operation])
+        if self.randaugment:
+            ops = random.choices(self.augment_list, k=self.n)
+        else :
+            ops = []
+            for operation in self.operation_list[label]:   
+                ops.append(self.augment_list[operation])
 
         img0 = transform(img, label, ops, self.power_list)
         img1 = transform(img, label, ops, self.power_list)
@@ -285,4 +289,3 @@ class RandAugment():
         img0 = randaugment_transform(img, self.augment_list, self.m, self.n)
         img1 = randaugment_transform(img, self.augment_list, self.m, self.n)
         return [img0, img1]
-
