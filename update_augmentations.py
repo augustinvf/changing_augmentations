@@ -59,12 +59,12 @@ def adjust_powers(criterion, threshold, old_results, label, power_list, operatio
 
 def change_power_list(power_list, label, operation_list, value):
     if value < 0 :
+        print("moins de puissance pour la classe", label)
         for power in operation_list[label] :
-            print("moins de puissance pour la classe", label)
             power_list[label][power] = max(value + power_list[label][power], 0)
     else :
+        print("plus de puissance pour la classe", label)
         for power in operation_list[label] :
-            print("plus de puissance pour la classe", label)
             power_list[label][power] = min(value + power_list[label][power], 30)
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
