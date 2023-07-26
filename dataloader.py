@@ -7,7 +7,7 @@ from augmentations import RandAugment
 
 batch_size = 128
 
-augmentation_adjustment=True
+augmentation_adjustment=False
 
 randaugment=True
 n = 2
