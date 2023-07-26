@@ -245,6 +245,7 @@ class TransformForOneImage():
 
     def __call__(self, img, label):
         if self.randaugment:
+            print("on prend deux transforms")
             ops = random.choices(self.augment_list, k=self.n)
         else :
             ops = []
@@ -261,31 +262,3 @@ class TransformForOneImage():
 
     def update_operation_list(self, operation_list: list):
         self.operation_list = operation_list
-
-def randaugment_transform(img, all_operations, power, numbers_of_operations_sampled):
-        final_transformations = T.Compose(
-            [
-            T.ToTensor(),
-            T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
-            ]
-        )
-        
-        img = T.Resize((32, 32))(img)
-        ops = random.choices(all_operations, k=numbers_of_operations_sampled)
-        for op, minval, maxval in ops:
-            val = (float(power) / 30) * float(maxval - minval) + minval
-            img = op(img, val)
-        img = final_transformations(img)
-
-        return img
-
-class RandAugment():
-    def __init__(self, n, m):
-        self.n = n
-        self.m = m      # [0, 30]
-        self.augment_list = augment_list()
-
-    def __call__(self, img):
-        img0 = randaugment_transform(img, self.augment_list, self.m, self.n)
-        img1 = randaugment_transform(img, self.augment_list, self.m, self.n)
-        return [img0, img1]
