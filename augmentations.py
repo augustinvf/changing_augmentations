@@ -229,6 +229,7 @@ def transform(img, label, ops, power_list):
     img = T.Resize((32, 32))(img)
     for operation_index, (op, minval, maxval) in enumerate(ops):
         power = power_list[label][operation_index]
+        print("power :", power)
         val = (float(power) / 30) * float(maxval - minval) + minval
         img = op(img, val)
     img = final_transformations(img)
@@ -245,7 +246,6 @@ class TransformForOneImage():
 
     def __call__(self, img, label):
         if self.randaugment:
-            print("on prend deux transforms")
             ops = random.choices(self.augment_list, k=self.n)
         else :
             ops = []

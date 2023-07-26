@@ -78,6 +78,7 @@ scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb
 
 for cycle in range (nb_cycles) :
     for epochs in range(nb_epochs_self_supervised_by_cycle) :
+        print(power_list)
         print("debut self-supervised")
         sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
         wandb.log({"loss self-supervised": sum_loss_ss/nb_steps,
