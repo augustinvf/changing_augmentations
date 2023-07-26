@@ -229,7 +229,6 @@ def transform(img, label, ops, power_list):
     img = T.Resize((32, 32))(img)
     for operation_index, (op, minval, maxval) in enumerate(ops):
         power = power_list[label][operation_index]
-        print("power :", power)
         val = (float(power) / 30) * float(maxval - minval) + minval
         img = op(img, val)
     img = final_transformations(img)
