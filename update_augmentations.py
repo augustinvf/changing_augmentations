@@ -49,13 +49,9 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
 
 def adjust_powers(criterion, threshold, old_results, label, power_list, operation_list):
     has_changed = True
-    gap = criterion - old_results[label]
     if criterion > threshold :
         print("on change une puissance")
-        if gap > 0 :
-            change_power_list(power_list, label, operation_list, -2)
-        if gap < 0 :
-            change_power_list(power_list, label, operation_list, 1)
+        change_power_list(power_list, label, operation_list, 2)
     else :
         if old_results[label] < threshold :
             has_changed = False
