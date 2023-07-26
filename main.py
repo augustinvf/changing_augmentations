@@ -8,17 +8,26 @@ from lightly.models.modules import SimCLRProjectionHead
 from lightly.loss import NTXentLoss
 
 from model import Model
-from dataloader import train_dataset_self_supervised, train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, batch_size, augmentation_adjustment
+from dataloader import initialize_dataloader
 from training import self_supervised_training, supervised_training
 from update_augmentations import initialize_power_list, initialize_operation_list
 from update_augmentations import compute_new_augmentations, update_new_augmentations, check_operation_list
 from augmentations import TransformForOneImage, len_augment_list
+from dataset import initialize_augmentations_for_dataset
 from eval import test_fct
 
 wandb.init(
     project = "changing_augmentations_project",
     name = "run_1"
 )
+
+# data initialization
+
+batch_size = 128
+randaugment = True
+n = 2
+m = 1
+train_dataloader_self_supervised, train_dataloader_supervised, test_dataloader, train_dataset_self_supervised = initialize_dataloader(batch_size, randaugment, n, m)
 
 # tool initialization
 
@@ -35,6 +44,8 @@ nb_epochs_supervised_by_cycle = 1
 
 # hyperparameters for augmentation updates
 
+augmentation_adjustments=False
+
 softmax = nn.Softmax(dim=0)
 nb_augmentations = len_augment_list()
 nb_same_time_operations = 2
@@ -50,7 +61,7 @@ nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 # configuring the training dataset whose augmentations will change
 
 self_supervised_augmentations = TransformForOneImage(power_list, operation_list)
-train_dataset_self_supervised.update_self_supervised_augmentations(self_supervised_augmentations)
+initialize_augmentations_for_dataset(train_dataset_self_supervised, self_supervised_augmentations, augmentation_adjustments)
 
 # hyperparameters for the model
 

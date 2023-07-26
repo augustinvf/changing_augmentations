@@ -1,7 +1,6 @@
 from typing import Optional, Callable, Tuple, Any
 
 from torchvision.datasets.cifar import CIFAR10
-import torchvision.transforms as T
 
 from PIL import Image
 
@@ -45,3 +44,7 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
 
     def update_self_supervised_augmentations(self, self_supervised_augmentations):
         self.self_supervised_augmentations = self_supervised_augmentations
+
+def initialize_augmentations_for_dataset(dataset, augmentations, augmentation_adjustments):
+    if augmentation_adjustments:
+        dataset.update_self_supervised_augmentations(augmentations)
