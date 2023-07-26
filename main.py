@@ -42,7 +42,7 @@ nb_epochs_supervised_by_cycle = 100
 
 augmentation_adjustments=False
 
-softmax = nn.Softmax(dim=0)
+softmax = nn.Softmax(dim=1)
 nb_augmentations = len_augment_list()
 nb_same_time_operations = 2
 power_list = initialize_power_list(nb_classes, nb_augmentations, 1, 1)
