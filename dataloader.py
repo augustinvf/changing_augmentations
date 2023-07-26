@@ -9,7 +9,7 @@ batch_size = 128
 
 augmentation_adjustment=True
 
-randaugment=False
+randaugment=True
 n = 2
 m = 1
 

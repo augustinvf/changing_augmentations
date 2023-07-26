@@ -29,9 +29,9 @@ input_size_classifier = 512
 projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
 
-nb_cycles = 10
-nb_epochs_self_supervised_by_cycle = 2
-nb_epochs_supervised_by_cycle = 1
+nb_cycles = 1
+nb_epochs_self_supervised_by_cycle = 100
+nb_epochs_supervised_by_cycle = 100
 
 # hyperparameters for augmentation updates
 
