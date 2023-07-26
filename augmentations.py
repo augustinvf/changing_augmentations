@@ -265,6 +265,7 @@ class RandAugment():
         self.augment_list = augment_list()
 
     def __call__(self, img):
+        print("yes")
         ops = random.choices(self.augment_list, k=self.n)
         for op, minval, maxval in ops:
             val = (float(self.m) / 30) * float(maxval - minval) + minval
