@@ -243,7 +243,7 @@ class TransformForOneImage():
         self.augment_list = augment_list()
 
     def __call__(self, img, label):
-        print("yes")
+        print("no randaugment")
         ops = []
         for operation in self.operation_list[label]:   
             ops.append(self.augment_list[operation])
