@@ -46,7 +46,7 @@ nb_epochs_supervised_by_cycle = config.nb_epochs_supervised_by_cycle
 
 # hyperparameters for augmentation updates
 
-augmentation_adjustments=False
+augmentation_adjustments=True
 
 softmax = nn.Softmax(dim=1)
 nb_augmentations = len_augment_list()
@@ -62,7 +62,7 @@ nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
-randaugment = True
+randaugment = False
 if randaugment:
     augmentation_adjustments=False
 self_supervised_augmentations = TransformForOneImage(power_list, operation_list, randaugment=randaugment, n=nb_same_time_operations)
@@ -104,6 +104,7 @@ for cycle in range (nb_cycles) :
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         check_operation_list(nb_classes, states, nb_augmentations, operation_list)
+    print("power_list :", power_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
 
