@@ -44,9 +44,7 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
 
         y_hat = model(image_without_augmentation, "supervised")
 
-        distributions = torch.cat(torch.split(softmax(y_hat), 1), dim=0).to(device).detach()
-        for index, distribution in enumerate(distributions) :
-            ressemblance_matrix[labels[index],:] += distribution
+        maj_ressemblance_matrix(ressemblance_matrix, y_hat, device, softmax, labels)
 
         accuracy += torch.sum(torch.eq(torch.argmax(y_hat, axis = 1), labels)).item()
 
@@ -64,3 +62,12 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     ressemblance_matrix = ressemblance_matrix / nb_experiences_by_class.reshape(-1, 1)
 
     return sum_loss_su, accuracy, ressemblance_matrix
+
+def maj_ressemblance_matrix(matrix, y_hat, device, softmax, labels):
+    distributions = torch.cat(torch.split(softmax(y_hat), 1), dim=0).to(device).detach()
+    for index, distribution in enumerate(distributions) :
+        matrix[labels[index],:] += distribution
+
+def maj_confusion_matrix(matrix, y_hat, labels):
+        for index, prediction in enumerate(y_hat):
+            matrix[labels[index],prediction] += 1

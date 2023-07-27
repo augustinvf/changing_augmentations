@@ -51,7 +51,7 @@ class SimCLR() :
             brightness=self.cj_strength * self.cj_bright * power,
             contrast=self.cj_strength * self.cj_contrast * power,
             saturation=self.cj_strength * self.cj_sat * power,
-            hue=self.cj_strength * self.cj_hue * power,
+            hue=max(0.5, self.cj_strength * self.cj_hue * power),
         )
 
         transform = [
