@@ -47,13 +47,11 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     snd_maxi = torch.argmax(ressemblance_matrix[label,:])
     poba_snd_maxi = ressemblance_matrix[label,snd_maxi]
     diff = (diff-poba_snd_maxi).item()
-    print("la classe", maxi.item(), "et", snd_maxi.item(), "se ressemblent et ont une diff de : ", diff)
     return diff
 
 def adjust_powers(criterion, threshold, old_results, label, power_list, operation_list):
     has_changed = True
     if criterion > threshold and criterion > 0:
-        print("on change une puissance")
         change_power_list(power_list, label, operation_list, 1)
     return has_changed
 

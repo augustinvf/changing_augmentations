@@ -55,7 +55,7 @@ nb_same_time_operations = config.nb_same_time_operations
 power_list = initialize_power_list(nb_classes, nb_augmentations, 5, 5)
 operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
-threshold = 0.2
+threshold = 0.3
 old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
 ressemblance_matrix = torch.zeros((nb_classes, nb_classes), device=device)
@@ -102,9 +102,19 @@ for cycle in range (nb_cycles) :
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         #check_operation_list(nb_classes, states, nb_augmentations, operation_list)
-    print("power_list :", power_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
+    wandb.log({"power class 0 ": power_list[0],
+               "power class 1 ": power_list[1],
+               "power class 2 ": power_list[2],
+               "power class 3 ": power_list[3],
+               "power class 4 ": power_list[4],
+               "power class 5 ": power_list[5],
+               "power class 6 ": power_list[6],
+               "power class 7 ": power_list[7],
+               "power class 8 ": power_list[8], 
+               "power class 9 ": power_list[9],
+                })
 
 # test
 
