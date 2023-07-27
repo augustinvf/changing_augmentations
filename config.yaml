@@ -13,7 +13,7 @@ nb_epochs_supervised_by_cycle: 100
 
 # hyperparameters for augmentation updates
 
-nb_same_time_operations: 2
+nb_same_time_operations: 3
 
 # hyperparameters for the model
 
