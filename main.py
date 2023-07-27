@@ -15,6 +15,7 @@ from training import self_supervised_training, supervised_training
 from update_augmentations import initialize_power_list, initialize_operation_list
 from update_augmentations import compute_new_augmentations, update_new_augmentations, check_operation_list
 from augmentations import TransformForOneImage, len_augment_list
+from sim_clr_transforms import SimCLR
 from eval import test_fct
 
 wandb.init(
@@ -62,10 +63,7 @@ nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
-randaugment = False
-if randaugment:
-    augmentation_adjustments=False
-self_supervised_augmentations = TransformForOneImage(power_list, operation_list, randaugment=randaugment, n=nb_same_time_operations)
+self_supervised_augmentations = SimCLR(power_list=power_list)
 train_dataset_self_supervised.update_self_supervised_augmentations(self_supervised_augmentations)
 
 # hyperparameters for the model

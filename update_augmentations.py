@@ -72,7 +72,7 @@ def change_power_list(power_list, label, operation_list, value):
 
 def update_new_augmentations(self_supervised_augmentations, power_list: list, operation_list: list):
     self_supervised_augmentations.update_power_list(power_list)
-    self_supervised_augmentations.update_operation_list(operation_list)
+    #self_supervised_augmentations.update_operation_list(operation_list)
 
 # Looking at the state of the transformations : if a state has not changed, choose new one
 
