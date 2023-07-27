@@ -48,10 +48,10 @@ class SimCLR() :
         power = self.power_list[label] / 5
 
         color_jitter = T.ColorJitter(
-            brightness=self.cj_strength * self.cj_bright*power,
-            contrast=self.cj_strength * self.cj_contrast*power,
-            saturation=self.cj_strength * self.cj_sat*power,
-            hue=self.cj_strength * self.cj_hue*power,
+            brightness=self.cj_strength * self.cj_bright * power,
+            contrast=self.cj_strength * self.cj_contrast * power,
+            saturation=self.cj_strength * self.cj_sat * power,
+            hue=self.cj_strength * self.cj_hue * power,
         )
 
         transform = [
