@@ -47,7 +47,7 @@ nb_epochs_supervised_by_cycle = config.nb_epochs_supervised_by_cycle
 
 # hyperparameters for augmentation updates
 
-augmentation_adjustments=False
+augmentation_adjustments=True
 
 softmax = nn.Softmax(dim=1)
 nb_augmentations = len_augment_list()
