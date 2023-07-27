@@ -226,7 +226,7 @@ def transform(img, label, ops, power_list):
         T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
         ]
     )
-    img = T.Resize((32, 32))(img)
+    img = T.RandomResizedCrop(size=32, scale=(0.3, 1.0))(img)
     for operation_index, (op, minval, maxval) in enumerate(ops):
         power = power_list[label][operation_index]
         val = (float(power) / 30) * float(maxval - minval) + minval
