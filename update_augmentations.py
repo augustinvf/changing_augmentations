@@ -31,8 +31,6 @@ def compute_new_augmentations(nb_classes, power_list, operation_list, old_result
                               states, ressemblance_matrix, threshold, p=2):
     for label in range(nb_classes):
         diff = evaluation_criterion(label, ressemblance_matrix, p)
-        print("classes : ", label)
-        print("diff : ", diff)
         has_changed = adjust_powers(diff, threshold, old_results, label, power_list, operation_list)
         old_results[label] = diff
         states[label] = has_changed
@@ -42,9 +40,12 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     provides the comparison criterion for power adjustment
     """
     maxi = torch.argmax(ressemblance_matrix[label,:])
+    proba_maxi = ressemblance_matrix[label,maxi]
     ressemblance_matrix[label,maxi] = 0
     snd_maxi = torch.argmax(ressemblance_matrix[label,:])
-    diff = torch.norm((maxi-snd_maxi).float(), p=p).item()
+    poba_snd_maxi = ressemblance_matrix[label,snd_maxi]
+    diff = torch.norm((proba_maxi-poba_snd_maxi).float(), p=p).item()
+    print("la classe", maxi, "et", snd_maxi, "se ressemblent et ont une diff de : ", diff)
     return diff
 
 def adjust_powers(criterion, threshold, old_results, label, power_list, operation_list):
