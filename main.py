@@ -101,7 +101,7 @@ for cycle in range (nb_cycles) :
     if augmentation_adjustments:
         compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
-        check_operation_list(nb_classes, states, nb_augmentations, operation_list)
+        #check_operation_list(nb_classes, states, nb_augmentations, operation_list)
     print("power_list :", power_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
