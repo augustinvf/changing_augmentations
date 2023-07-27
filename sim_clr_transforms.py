@@ -23,7 +23,7 @@ class SimCLR() :
         vf_prob: float = 0.0,
         hf_prob: float = 0.5,
         rr_prob: float = 0.0,
-        rr_degrees: Union[None, float, Tuple[float, float]] = None,
+        rr_degrees: int = 15,
         power_list = [],
     ) :
         self.cj_strength = cj_strength
