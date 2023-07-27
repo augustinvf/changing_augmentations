@@ -55,7 +55,7 @@ nb_same_time_operations = config.nb_same_time_operations
 power_list = initialize_power_list(nb_classes, nb_augmentations, 5, 5)
 operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
-threshold = 0.35
+threshold = 0.4
 old_results = torch.tensor([0 for _ in range(nb_classes)])
 states = [True for _ in range(nb_classes)]
 ressemblance_matrix = torch.zeros((nb_classes, nb_classes), device=device)
@@ -63,7 +63,7 @@ nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
-self_supervised_augmentations = SimCLR(power_list=power_list)
+self_supervised_augmentations = SimCLR(power_list=power_list, gaussian_blur=0.0)
 train_dataset_self_supervised.update_self_supervised_augmentations(self_supervised_augmentations)
 
 # hyperparameters for the model
