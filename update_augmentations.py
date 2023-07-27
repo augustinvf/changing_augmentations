@@ -11,11 +11,11 @@ def initialize_power_list(nb_classes: int, nb_augmentations: int, mini: int, max
                           val_for_every_power_and_class: int=None, 
                           powers_for_every_class: List[Union[int, float]]=None):
     if val_for_every_power_and_class:
-        power_list = [[val_for_every_power_and_class for _ in range(nb_augmentations)] for _ in range (nb_classes)]
+        power_list = [val_for_every_power_and_class  for _ in range (nb_classes)]
     elif powers_for_every_class:
         power_list = [powers_for_every_class for _ in range (nb_classes)]
     else :
-        power_list = [[random.randint(mini, maxi) for _ in range(nb_augmentations)] for _ in range (nb_classes)]
+        power_list = [random.randint(mini, maxi) for _ in range (nb_classes)]
     return power_list
 
 def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_time_operations: int, ops_for_every_class: list=None):
@@ -66,7 +66,7 @@ def change_power_list(power_list, label, operation_list, value):
     else :
         print("plus de puissance pour la classe", label)
         for power in operation_list[label] :
-            power_list[label][power] = min(value + power_list[label][power], 30)
+            power_list[label][power] = min(value + power_list[label][power], 10)
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
 
