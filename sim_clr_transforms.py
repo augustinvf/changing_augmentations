@@ -61,7 +61,7 @@ class SimCLR() :
             T.RandomVerticalFlip(p=self.vf_prob),
             T.RandomApply([color_jitter], p=self.cj_prob),
             T.RandomGrayscale(p=self.random_gray_scale),
-            GaussianBlur(kernel_size=self.kernel_size, sigmas=self.sigmas*power, prob=self.gaussian_blur),
+            GaussianBlur(kernel_size=self.kernel_size, sigmas=[self.sigmas[0]*power, self.sigmas[1]*power], prob=self.gaussian_blur),
             T.ToTensor(),
             T.Normalize(mean = [0.4914, 0.4822, 0.4465], std = [0.2470, 0.2435, 0.2616])
         ]
