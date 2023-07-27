@@ -39,6 +39,7 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     """
     provides the comparison criterion for power adjustment
     """
+    diff = 0
     maxi = torch.argmax(ressemblance_matrix[label,:])
     proba_maxi = ressemblance_matrix[label,maxi]
     diff += proba_maxi
