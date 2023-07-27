@@ -44,6 +44,8 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     ressemblance_matrix[label,maxi] = 0
     snd_maxi = torch.argmax(ressemblance_matrix[label,:])
     poba_snd_maxi = ressemblance_matrix[label,snd_maxi]
+    print(proba_maxi)
+    print(snd_maxi)
     diff = (proba_maxi-poba_snd_maxi).item()
     print("la classe", maxi.item(), "et", snd_maxi.item(), "se ressemblent et ont une diff de : ", diff)
     return diff
