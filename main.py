@@ -63,7 +63,7 @@ nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
 # configuring the training dataset whose augmentations will change
 
-self_supervised_augmentations = SimCLR(power_list=power_list, gaussian_blur=0.0)
+self_supervised_augmentations = SimCLR(power_list=power_list)
 train_dataset_self_supervised.update_self_supervised_augmentations(self_supervised_augmentations)
 
 # hyperparameters for the model
