@@ -23,7 +23,7 @@ def test_fct(device, model, test_dataloader, matrix, nb_experiences_by_class):
     final_accuracy = positive_tests / total_tests
 
     matrix = matrix / nb_experiences_by_class.reshape(-1, 1)
-    torch.save(matrix, "./confusion_matrix_1_divise_par_5_fois_sim_clr.pth")
+    torch.save(matrix, "./confusion_matrix_sim_clr_1_100_100.pth")
 
     return final_accuracy
 
