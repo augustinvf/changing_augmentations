@@ -44,7 +44,7 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
 
         y_hat = model(image_without_augmentation, "supervised")
 
-        maj_confusion_matrix(ressemblance_matrix, y_hat, labels)
+        maj_ressemblance_matrix(ressemblance_matrix, y_hat, device, softmax, labels)
 
         accuracy += torch.sum(torch.eq(torch.argmax(y_hat, axis = 1), labels)).item()
 
