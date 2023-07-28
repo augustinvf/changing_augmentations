@@ -22,13 +22,10 @@ def initialize_operation_list(nb_classes: int, nb_augmentations: int, nb_same_ti
 
 # Functions to change the augmentations
 
-def compute_new_augmentations(nb_classes, power_list, operation_list, old_results, 
-                              states, ressemblance_matrix, threshold, p=2):
+def compute_new_augmentations(nb_classes, power_list, ressemblance_matrix, threshold):
     for label in range(nb_classes):
-        diff = evaluation_criterion(label, ressemblance_matrix, p)
-        has_changed = adjust_powers(diff, threshold, old_results, label, power_list, operation_list)
-        old_results[label] = diff
-        states[label] = has_changed
+        diff = evaluation_criterion(label, ressemblance_matrix)
+        adjust_powers(diff, threshold, label, power_list)
 
 def evaluation_criterion(label, ressemblance_matrix):
     """

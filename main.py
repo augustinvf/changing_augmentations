@@ -95,7 +95,7 @@ for cycle in range (nb_cycles) :
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
     if augmentation_adjustments:
-        compute_new_augmentations(nb_classes, power_list, ressemblance_matrix, threshold, norm)
+        compute_new_augmentations(nb_classes, power_list, ressemblance_matrix, threshold)
         update_new_augmentations(self_supervised_augmentations, power_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
