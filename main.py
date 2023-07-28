@@ -47,11 +47,11 @@ nb_epochs_supervised_by_cycle = config.nb_epochs_supervised_by_cycle
 
 # hyperparameters for augmentation updates
 
-augmentation_adjustments=True
+augmentation_adjustments=False
 
 softmax = nn.Softmax(dim=1)
 nb_augmentations = len_augment_list()
-power_list = initialize_power_list(nb_classes, nb_augmentations, 5, 5)
+power_list = initialize_power_list(nb_classes, nb_augmentations, 50, 50)
 threshold = config.threshold
 ressemblance_matrix = torch.zeros((nb_classes, nb_classes), device=device)
 nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
@@ -97,9 +97,7 @@ for cycle in range (nb_cycles) :
     if augmentation_adjustments:
         compute_new_augmentations(nb_classes, power_list, ressemblance_matrix, threshold)
         update_new_augmentations(self_supervised_augmentations, power_list)
-    ressemblance_matrix.fill_(0)
-    nb_experiences_by_class.fill_(0)
-    wandb.log({"power class 0 ": power_list[0],
+        wandb.log({"power class 0 ": power_list[0],
                "power class 1 ": power_list[1],
                "power class 2 ": power_list[2],
                "power class 3 ": power_list[3],
@@ -110,6 +108,8 @@ for cycle in range (nb_cycles) :
                "power class 8 ": power_list[8], 
                "power class 9 ": power_list[9],
                 })
+    ressemblance_matrix.fill_(0)
+    nb_experiences_by_class.fill_(0)
 
 # test
 
