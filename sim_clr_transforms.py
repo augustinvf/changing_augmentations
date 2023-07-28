@@ -53,7 +53,7 @@ class SimCLR() :
             saturation=self.cj_strength * self.cj_sat * power,
             hue=max(0.5, self.cj_strength * self.cj_hue * power),
         )
-
+        print(max(0.5, self.cj_strength * self.cj_hue * power))
         transform = [
             T.RandomResizedCrop(size=32, scale=(self.min_scale, 1.0)),
             random_rotation_transform(rr_prob=self.rr_prob, rr_degrees=self.rr_degrees*power),
