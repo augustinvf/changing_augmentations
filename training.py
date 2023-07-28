@@ -55,7 +55,7 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
         loss_su.backward()
         optimizer_su.step()
 
-        nb_experiences_by_class += torch.bincount(labels)
+        nb_experiences_by_class += torch.bincount(labels, minlength=10)
     
     scheduler_su.step()
 
