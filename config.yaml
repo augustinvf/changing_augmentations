@@ -14,7 +14,7 @@ nb_epochs_supervised_by_cycle: 1
 # hyperparameters to change how to update augmentations
 
 nb_same_time_operations: 2
-threshold: 0.05
+threshold: 0.8
 confusion_matrix: True    # Si True, matrice de confusion, sinon matrice de ressemblance
 
 # hyperparameters linked to the powers of augmentations
