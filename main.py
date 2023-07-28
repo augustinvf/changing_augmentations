@@ -51,7 +51,7 @@ augmentation_adjustments=False
 
 softmax = nn.Softmax(dim=1)
 nb_augmentations = len_augment_list()
-power_list = initialize_power_list(nb_classes, nb_augmentations, 50, 50)
+power_list = initialize_power_list(nb_classes, nb_augmentations, 1, 1)
 threshold = config.threshold
 ressemblance_matrix = torch.zeros((nb_classes, nb_classes), device=device)
 nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
