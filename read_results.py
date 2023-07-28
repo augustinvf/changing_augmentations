@@ -1,5 +1,7 @@
+import sys
 import torch
 
-matrix = torch.load("./confusion_matrix.pth")
+chemin = str(sys.argv[1])
+matrix = torch.load(chemin)
 
 print(matrix)
