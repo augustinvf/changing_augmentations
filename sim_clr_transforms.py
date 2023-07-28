@@ -46,18 +46,13 @@ class SimCLR() :
     def __call__(self, image, label) :
 
         power = self.power_list[label] / 5
-        x = min(0.5, self.cj_strength * self.cj_hue * power)
 
         color_jitter = T.ColorJitter(
             brightness=self.cj_strength * self.cj_bright * power,
             contrast=self.cj_strength * self.cj_contrast * power,
             saturation=self.cj_strength * self.cj_sat * power,
-            hue= x
+            hue=min(0.5, self.cj_strength * self.cj_hue * power)
         )
-        if not (-0.5 < x < 0.5) :
-            print(self.power_list)
-            print(label)
-            print(power)
 
         transform = [
             T.RandomResizedCrop(size=32, scale=(self.min_scale, 1.0)),
