@@ -14,7 +14,8 @@ nb_epochs_supervised_by_cycle: 1
 # hyperparameters for augmentation updates
 
 nb_same_time_operations: 2
-threshold: 0.3
+threshold: 0.05
+confusion_matrix: True    # Si true, matrice de confusion, sinon matrice de ressemblance
 
 # hyperparameters for the model
 

@@ -40,7 +40,7 @@ nb_classes = config.nb_classes
 input_size_classifier = config.input_size_classifier
 projection_head = SimCLRProjectionHead(512, 512, 128)
 nb_steps = len(train_dataloader_supervised)
-
+confusion_matrix = config.confusion_matrix
 nb_cycles = config.nb_cycles
 nb_epochs_self_supervised_by_cycle = config.nb_epochs_self_supervised_by_cycle
 nb_epochs_supervised_by_cycle = config.nb_epochs_supervised_by_cycle
@@ -88,7 +88,7 @@ for cycle in range (nb_cycles) :
                 })
     for epochs in range(nb_epochs_supervised_by_cycle) :
         sum_loss_su, accuracy = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, 
-                                                              scheduler_su, softmax, ressemblance_matrix, nb_experiences_by_class)
+                                                              scheduler_su, softmax, ressemblance_matrix, nb_experiences_by_class, confusion_matrix)
         ressemblance_matrix = ressemblance_matrix / nb_experiences_by_class.reshape(-1, 1)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
