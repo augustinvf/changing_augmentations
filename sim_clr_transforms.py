@@ -15,7 +15,7 @@ class SimCLR() :
         cj_contrast: float = 0.8,
         cj_sat: float = 0.8,
         cj_hue: float = 0.2,
-        min_scale: float = 0.3,
+        min_scale: float = 0.25,
         random_gray_scale: float = 0.2,
         gaussian_blur: float = 0.5,
         kernel_size: Optional[float] = None,
@@ -55,7 +55,7 @@ class SimCLR() :
         )
 
         transform = [
-            T.RandomResizedCrop(size=32, scale=(self.min_scale, 1.0)),
+            T.RandomResizedCrop(size=32, scale=(self.min_scale*(1-((power/5)/30)), 1.0)),
             random_rotation_transform(rr_prob=self.rr_prob, rr_degrees=self.rr_degrees*power),
             T.RandomHorizontalFlip(p=self.hf_prob),
             T.RandomVerticalFlip(p=self.vf_prob),
