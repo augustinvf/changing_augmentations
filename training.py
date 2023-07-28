@@ -59,7 +59,11 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     
     scheduler_su.step()
 
+    print(ressemblance_matrix)
+
     ressemblance_matrix = ressemblance_matrix / nb_experiences_by_class.reshape(-1, 1)
+
+    print(ressemblance_matrix)
 
     return sum_loss_su, accuracy, ressemblance_matrix
 
