@@ -92,17 +92,18 @@ for cycle in range (nb_cycles) :
                    "learning rate self-supervised": scheduler_ss.get_last_lr()[0]
                 })
     for epochs in range(nb_epochs_supervised_by_cycle) :
-        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, 
+        sum_loss_su, accuracy = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, 
                                                               scheduler_su, softmax, ressemblance_matrix, nb_experiences_by_class)
+        ressemblance_matrix = ressemblance_matrix / nb_experiences_by_class.reshape(-1, 1)
         wandb.log({"loss supervised": sum_loss_su/nb_steps,
                "accuracy supervised": accuracy/(batch_size*nb_steps),
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
     if augmentation_adjustments:
-        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, r_matrix, threshold, norm)
+        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, ressemblance_matrix, threshold, norm)
         update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
         #check_operation_list(nb_classes, states, nb_augmentations, operation_list)
-    print("final", r_matrix)
+    print("final", ressemblance_matrix)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
 

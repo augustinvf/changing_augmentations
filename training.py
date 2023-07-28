@@ -59,13 +59,7 @@ def supervised_training(device, model, train_dataloader_supervised, criterion_su
     
     scheduler_su.step()
 
-    print("before", ressemblance_matrix)
-
-    ressemblance_matrix = ressemblance_matrix / nb_experiences_by_class.reshape(-1, 1)
-
-    print("after", ressemblance_matrix)
-
-    return sum_loss_su, accuracy, ressemblance_matrix
+    return sum_loss_su, accuracy
 
 def maj_ressemblance_matrix(matrix, y_hat, device, softmax, labels):
     distributions = torch.cat(torch.split(softmax(y_hat), 1), dim=0).to(device).detach()
