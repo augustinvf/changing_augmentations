@@ -104,17 +104,18 @@ for cycle in range (nb_cycles) :
         #check_operation_list(nb_classes, states, nb_augmentations, operation_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
-    wandb.log({"power class 0 ": power_list[0],
-               "power class 1 ": power_list[1],
-               "power class 2 ": power_list[2],
-               "power class 3 ": power_list[3],
-               "power class 4 ": power_list[4],
-               "power class 5 ": power_list[5],
-               "power class 6 ": power_list[6],
-               "power class 7 ": power_list[7],
-               "power class 8 ": power_list[8], 
-               "power class 9 ": power_list[9],
-                })
+    print(power_list)
+    # wandb.log({"power class 0 ": power_list[0],
+    #            "power class 1 ": power_list[1],
+    #            "power class 2 ": power_list[2],
+    #            "power class 3 ": power_list[3],
+    #            "power class 4 ": power_list[4],
+    #            "power class 5 ": power_list[5],
+    #            "power class 6 ": power_list[6],
+    #            "power class 7 ": power_list[7],
+    #            "power class 8 ": power_list[8], 
+    #            "power class 9 ": power_list[9],
+    #             })
 
 # test
 
