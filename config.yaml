@@ -11,11 +11,16 @@ nb_cycles: 100
 nb_epochs_self_supervised_by_cycle: 1
 nb_epochs_supervised_by_cycle: 1
 
-# hyperparameters for augmentation updates
+# hyperparameters to change how to update augmentations
 
 nb_same_time_operations: 2
 threshold: 0.05
-confusion_matrix: True    # Si true, matrice de confusion, sinon matrice de ressemblance
+confusion_matrix: True    # Si True, matrice de confusion, sinon matrice de ressemblance
+
+# hyperparameters linked to the powers of augmentations
+
+gaussian_blur: 0.0      # SimCLR : pas de gaussian blur sur CIFAR10
+min_scale: 0.08
 
 # hyperparameters for the model
 
