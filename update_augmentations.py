@@ -41,9 +41,9 @@ def evaluation_criterion(label, ressemblance_matrix):
     diff = (diff-poba_snd_maxi).item()
     return diff
 
-def adjust_powers(criterion, threshold, label, power_list, operation_list):
+def adjust_powers(criterion, threshold, label, power_list):
     if criterion > threshold and criterion > 0:
-        change_power_list(power_list, label, operation_list, 1)
+        change_power_list(power_list, label, 1)
 
 def change_power_list(power_list, label, value):
     power_list[label] += value
