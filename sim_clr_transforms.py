@@ -55,7 +55,7 @@ class SimCLR() :
         )
 
         transform = [
-            T.RandomResizedCrop(size=32, scale=(self.min_scale*(1-((power/5)/30)), 1.0)),
+            T.RandomResizedCrop(size=32, scale=(self.min_scale*(1-(power/30)), 1.0)),
             random_rotation_transform(rr_prob=self.rr_prob, rr_degrees=self.rr_degrees*power),
             T.RandomHorizontalFlip(p=self.hf_prob),
             T.RandomVerticalFlip(p=self.vf_prob),

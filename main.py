@@ -12,9 +12,9 @@ from lightly.loss import NTXentLoss
 from model import Model
 from dataloader import initialize_dataloader
 from training import self_supervised_training, supervised_training
-from update_augmentations import initialize_power_list, initialize_operation_list
-from update_augmentations import compute_new_augmentations, update_new_augmentations, check_operation_list
-from augmentations import TransformForOneImage, len_augment_list
+from update_augmentations import initialize_power_list
+from update_augmentations import compute_new_augmentations, update_new_augmentations
+from augmentations import len_augment_list
 from sim_clr_transforms import SimCLR
 from eval import test_fct
 
@@ -51,13 +51,9 @@ augmentation_adjustments=True
 
 softmax = nn.Softmax(dim=1)
 nb_augmentations = len_augment_list()
-nb_same_time_operations = config.nb_same_time_operations
 power_list = initialize_power_list(nb_classes, nb_augmentations, 5, 5)
-operation_list = initialize_operation_list(nb_classes, nb_augmentations, nb_same_time_operations)   # operations whose powers are currently adjusted
 norm = 2
 threshold = 0.3
-old_results = torch.tensor([0 for _ in range(nb_classes)])
-states = [True for _ in range(nb_classes)]
 ressemblance_matrix = torch.zeros((nb_classes, nb_classes), device=device)
 nb_experiences_by_class = torch.zeros((1, nb_classes), device=device)
 
@@ -100,12 +96,10 @@ for cycle in range (nb_cycles) :
                "learning rate supervised": scheduler_su.get_last_lr()[0]
                 })
     if augmentation_adjustments:
-        compute_new_augmentations(nb_classes, power_list, operation_list, old_results, states, ressemblance_matrix, threshold, norm)
-        update_new_augmentations(self_supervised_augmentations, power_list, operation_list)
-        #check_operation_list(nb_classes, states, nb_augmentations, operation_list)
+        compute_new_augmentations(nb_classes, power_list, ressemblance_matrix, threshold, norm)
+        update_new_augmentations(self_supervised_augmentations, power_list)
     ressemblance_matrix.fill_(0)
     nb_experiences_by_class.fill_(0)
-
     wandb.log({"power class 0 ": power_list[0],
                "power class 1 ": power_list[1],
                "power class 2 ": power_list[2],

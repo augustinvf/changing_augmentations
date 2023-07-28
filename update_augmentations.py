@@ -3,16 +3,11 @@ from typing import Union, Type, List
 import torch
 import random
 
-from augmentations import augment_list
-
 # Initialize list to follow augmentation changes
 
-def initialize_power_list(nb_classes: int, nb_augmentations: int, mini: int, maxi: int, 
-                          val_for_every_power_and_class: int=None, 
+def initialize_power_list(nb_classes: int, mini: int, maxi: int, 
                           powers_for_every_class: List[Union[int, float]]=None):
-    if val_for_every_power_and_class:
-        power_list = [val_for_every_power_and_class  for _ in range (nb_classes)]
-    elif powers_for_every_class:
+    if powers_for_every_class:
         power_list = [powers_for_every_class for _ in range (nb_classes)]
     else :
         power_list = [random.randint(mini, maxi) for _ in range (nb_classes)]
@@ -49,25 +44,14 @@ def evaluation_criterion(label, ressemblance_matrix, p=2):
     diff = (diff-poba_snd_maxi).item()
     return diff
 
-def adjust_powers(criterion, threshold, old_results, label, power_list, operation_list):
-    has_changed = True
+def adjust_powers(criterion, threshold, label, power_list, operation_list):
     if criterion > threshold and criterion > 0:
         change_power_list(power_list, label, operation_list, 1)
-    return has_changed
 
-def change_power_list(power_list, label, operation_list, value):
+def change_power_list(power_list, label, value):
     power_list[label] += value
 
 # Applying the augmentations ie changing the attributs of the transformation to make the changes effective
 
-def update_new_augmentations(self_supervised_augmentations, power_list: list, operation_list: list):
+def update_new_augmentations(self_supervised_augmentations, power_list: list):
     self_supervised_augmentations.update_power_list(power_list)
-    #self_supervised_augmentations.update_operation_list(operation_list)
-
-# Looking at the state of the transformations : if a state has not changed, choose new one
-
-def check_operation_list(nb_classes, states, nb_augmentations, operation_list):
-    for label in range(nb_classes):
-        if not states[label] :
-            new_powers = random.sample(augment_list(), k=nb_augmentations)
-            operation_list[label] = new_powers

@@ -34,6 +34,7 @@ class TrainDatasetTransformsCIFAR10(CIFAR10):
 
         if self.self_supervised_augmentations:
             img = self.self_supervised_augmentations(img, target)
+            
         elif self.transform :
             img = self.transform(img)
 

@@ -245,12 +245,8 @@ class TransformForOneImage():
         self.n = n
 
     def __call__(self, img, label):
-        if self.randaugment:
-            ops = random.choices(self.augment_list, k=self.n)
-        else :
-            ops = []
-            for operation in self.operation_list[label]:   
-                ops.append(self.augment_list[operation])
+        
+        ops = random.choices(self.augment_list, k=self.n)
 
         img0 = transform(img, label, ops, self.power_list)
         img1 = transform(img, label, ops, self.power_list)
