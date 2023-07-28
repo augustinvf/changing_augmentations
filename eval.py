@@ -31,5 +31,3 @@ def maj_confusion_matrix(matrix, y_hat, labels):
         for index, label in enumerate(labels) :
             prediction = torch.argmax(y_hat[index, :]).detach().item()
             matrix[label,prediction] += 1
-        
-            
