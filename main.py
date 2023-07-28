@@ -84,7 +84,19 @@ scheduler_su = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_su, T_max=nb
                                                           eta_min=config.scheduler_su.params.eta_min, last_epoch=-1)
 
 # training
-
+for cycle in range (pre_cycles) :
+    for epochs in range(nb_epochs_self_supervised_by_pre_cycle) :
+        sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
+        wandb.log({"loss self-supervised": sum_loss_ss/nb_steps,
+                   "learning rate self-supervised": scheduler_ss.get_last_lr()[0]
+                })
+    for epochs in range(nb_epochs_supervised_by_pre_cycle) :
+        sum_loss_su, accuracy, r_matrix = supervised_training(device, model, train_dataloader_supervised, criterion_su, optimizer_su, 
+                                                              scheduler_su, softmax, ressemblance_matrix, nb_experiences_by_class)
+        wandb.log({"loss supervised": sum_loss_su/nb_steps,
+               "accuracy supervised": accuracy/(batch_size*nb_steps),
+               "learning rate supervised": scheduler_su.get_last_lr()[0]
+                })
 for cycle in range (nb_cycles) :
     for epochs in range(nb_epochs_self_supervised_by_cycle) :
         sum_loss_ss = self_supervised_training(device, model, train_dataloader_self_supervised, criterion_ss, optimizer_ss, scheduler_ss)
