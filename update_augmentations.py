@@ -30,7 +30,7 @@ def compute_new_augmentations(nb_classes, power_list, operation_list, old_result
         old_results[label] = diff
         states[label] = has_changed
 
-def evaluation_criterion(label, ressemblance_matrix, p=2):
+def evaluation_criterion(label, ressemblance_matrix):
     """
     provides the comparison criterion for power adjustment
     """
